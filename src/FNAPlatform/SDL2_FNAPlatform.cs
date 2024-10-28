@@ -1518,8 +1518,10 @@ namespace Microsoft.Xna.Framework
 			{
 				return Path.Combine(
 					Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-					"SavedGames",
-					exeName
+					Path.Combine(
+						"SavedGames",
+						exeName
+					)
 				);
 			}
 			if (OSVersion.Equals("Mac OS X"))
@@ -1531,8 +1533,10 @@ namespace Microsoft.Xna.Framework
 				}
 				return Path.Combine(
 					osConfigDir,
-					"Library/Application Support",
-					exeName
+					Path.Combine(
+						"Library/Application Support",
+						exeName
+					)
 				);
 			}
 			if (	OSVersion.Equals("Linux") ||

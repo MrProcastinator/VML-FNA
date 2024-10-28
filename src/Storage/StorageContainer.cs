@@ -105,10 +105,12 @@ namespace Microsoft.Xna.Framework.Storage
 			 */
 			storagePath = Path.Combine(
 				rootPath,		// Title folder (EXE name)...
-				name,			// Container folder...
-				playerIndex.HasValue ?	// Player folder...
-					("Player" + ((int) playerIndex.Value + 1).ToString()) :
-					"AllPlayers"
+				Path.Combine(
+					name,			// Container folder...
+					playerIndex.HasValue ?	// Player folder...
+						("Player" + ((int) playerIndex.Value + 1).ToString()) :
+						"AllPlayers"
+				)
 			);
 
 			// Create the folders, if needed.

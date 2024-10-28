@@ -36,6 +36,10 @@ namespace Microsoft.Xna.Framework
 			 * -flibit
 			 */
 
+			/* I'll do it without #if anyways :^)
+			* -MrProcastinator
+			*/
+
 			bool useSDL3 = Environment.GetEnvironmentVariable("FNA_PLATFORM_BACKEND") == "SDL3";
 
 			if (useSDL3)
@@ -227,7 +231,7 @@ namespace Microsoft.Xna.Framework
 			/* Do this AFTER ProgramInit so the platform library
 			 * has a chance to load first!
 			 */
-			FNALoggerEXT.HookFNA3D();
+			// FNALoggerEXT.HookFNA3D();
 		}
 
 		#endregion
