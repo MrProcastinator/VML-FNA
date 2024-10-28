@@ -10,6 +10,7 @@
 #region Using Statements
 using System;
 using System.Runtime.InteropServices;
+using MonoGame.Utilities;
 #endregion
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -87,7 +88,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				GraphicsDevice.GLDevice,
 				buffer,
 				offsetInBytes,
-				handle.AddrOfPinnedObject() + (startIndex * elementSizeInBytes),
+				handle.AddrOfPinnedObject().Add(startIndex * elementSizeInBytes),
 				elementCount,
 				elementSizeInBytes,
 				vertexStride,
@@ -110,7 +111,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				GraphicsDevice.GLDevice,
 				buffer,
 				0,
-				handle.AddrOfPinnedObject() + (startIndex * elementSizeInBytes),
+				handle.AddrOfPinnedObject().Add(startIndex * elementSizeInBytes),
 				elementCount,
 				elementSizeInBytes,
 				elementSizeInBytes,

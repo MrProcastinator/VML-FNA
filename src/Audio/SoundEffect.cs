@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using MonoGame.Utilities;
 #endregion
 
 namespace Microsoft.Xna.Framework.Audio
@@ -223,7 +224,7 @@ namespace Microsoft.Xna.Framework.Audio
 				Marshal.Copy(
 					extraData,
 					0,
-					formatPtr + MarshalHelper.SizeOf<FAudio.FAudioWaveFormatEx>(),
+					formatPtr.Add(MarshalHelper.SizeOf<FAudio.FAudioWaveFormatEx>()),
 					extraData.Length
 				);
 			}

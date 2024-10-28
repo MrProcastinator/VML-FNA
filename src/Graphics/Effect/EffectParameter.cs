@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using MonoGame.Utilities;
 #endregion
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -297,7 +298,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int[] result = new int[count];
 			for (int i = 0, j = 0; i < result.Length; i += ColumnCount, j += 16)
 			{
-				Marshal.Copy(values + j, result, i, ColumnCount);
+				Marshal.Copy(values.Add(j), result, i, ColumnCount);
 			}
 			return result;
 		}
@@ -463,7 +464,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			float[] result = new float[count];
 			for (int i = 0, j = 0; i < result.Length; i += ColumnCount, j += 16)
 			{
-				Marshal.Copy(values + j, result, i, ColumnCount);
+				Marshal.Copy(values.Add(j), result, i, ColumnCount);
 			}
 			return result;
 		}
@@ -628,7 +629,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		{
 			for (int i = 0, j = 0; i < value.Length; i += ColumnCount, j += 16)
 			{
-				Marshal.Copy(value, i, values + j, ColumnCount);
+				Marshal.Copy(value, i, values.Add(j), ColumnCount);
 			}
 		}
 
@@ -1099,7 +1100,7 @@ namespace Microsoft.Xna.Framework.Graphics
 #endif
 			for (int i = 0, j = 0; i < value.Length; i += ColumnCount, j += 16)
 			{
-				Marshal.Copy(value, i, values + j, ColumnCount);
+				Marshal.Copy(value, i, values.Add(j), ColumnCount);
 			}
 		}
 

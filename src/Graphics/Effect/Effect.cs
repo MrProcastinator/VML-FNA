@@ -12,6 +12,7 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using MonoGame.Utilities;
 #endregion
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -1000,18 +1001,18 @@ namespace Microsoft.Xna.Framework.Graphics
 							XNAType[(int) mem[j].info.parameter_type],
 							null, // FIXME: Nested structs! -flibit
 							null,
-							parameter.values + curOffset.ToInt32(),
+							parameter.values.Add(curOffset.ToInt32()),
 							memSize * 4,
 							outer
 						);
 
 						if (mem[j].info.parameter_type == MOJOSHADER_symbolType.MOJOSHADER_SYMTYPE_STRING)
 						{
-							int* index = (int*) (parameter.values + curOffset.ToInt32());
+							int* index = (int*) (parameter.values.Add(curOffset.ToInt32()));
 							toAdd.cachedString = outer.INTERNAL_GetStringFromObjectTable(*index);
 						}
 						memList.Add(toAdd);
-						curOffset += (int) memSize * 4;
+						curOffset = curOffset.Add((int) memSize * 4);
 					}
 				}
 				structMembers = new EffectParameterCollection(memList);

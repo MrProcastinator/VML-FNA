@@ -10,6 +10,7 @@
 #region Using Statements
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #endregion
 
@@ -18,12 +19,6 @@ namespace Microsoft.Xna.Framework.Graphics
 	[System.Security.SuppressUnmanagedCodeSecurity]
 	internal static class FNA3D
 	{
-		#region Private Constants
-
-		private const string nativeLibName = "FNA3D";
-
-		#endregion
-
 		#region Native Structures
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -149,7 +144,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate void FNA3D_LogFunc(IntPtr msg);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_HookLogFunctions(
 			FNA3D_LogFunc info,
 			FNA3D_LogFunc warn,
@@ -160,10 +155,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Driver Functions
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern uint FNA3D_PrepareWindowAttributes();
 		
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetDrawableSize(
 			IntPtr window,
 			out int w,
@@ -175,20 +170,20 @@ namespace Microsoft.Xna.Framework.Graphics
 		#region Init/Quit
 
 		/* IntPtr refers to an FNA3D_Device* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_CreateDevice(
 			ref FNA3D_PresentationParameters presentationParameters,
 			byte debugMode
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_DestroyDevice(IntPtr device);
 
 		#endregion
 
 		#region Presentation
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SwapBuffers(
 			IntPtr device,
 			ref Rectangle sourceRectangle,
@@ -196,7 +191,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			IntPtr overrideWindowHandle
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SwapBuffers(
 			IntPtr device,
 			IntPtr sourceRectangle, /* null Rectangle */
@@ -204,7 +199,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			IntPtr overrideWindowHandle
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SwapBuffers(
 			IntPtr device,
 			ref Rectangle sourceRectangle,
@@ -212,7 +207,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			IntPtr overrideWindowHandle
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SwapBuffers(
 			IntPtr device,
 			IntPtr sourceRectangle, /* null Rectangle */
@@ -224,7 +219,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Drawing
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_Clear(
 			IntPtr device,
 			ClearOptions options,
@@ -233,7 +228,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int stencil
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_DrawIndexedPrimitives(
 			IntPtr device,
 			PrimitiveType primitiveType,
@@ -246,7 +241,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			IndexElementSize indexElementSize
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_DrawInstancedPrimitives(
 			IntPtr device,
 			PrimitiveType primitiveType,
@@ -260,7 +255,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			IndexElementSize indexElementSize
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_DrawPrimitives(
 			IntPtr device,
 			PrimitiveType primitiveType,
@@ -272,43 +267,43 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Mutable Render States
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetViewport(
 			IntPtr device,
 			ref FNA3D_Viewport viewport
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetScissorRect(
 			IntPtr device,
 			ref Rectangle scissor
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetBlendFactor(
 			IntPtr device,
 			out Color blendFactor
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetBlendFactor(
 			IntPtr device,
 			ref Color blendFactor
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern int FNA3D_GetMultiSampleMask(IntPtr device);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetMultiSampleMask(
 			IntPtr device,
 			int mask
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern int FNA3D_GetReferenceStencil(IntPtr device);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetReferenceStencil(
 			IntPtr device,
 			int reference
@@ -318,25 +313,25 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Immutable Render States
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetBlendState(
 			IntPtr device,
 			ref FNA3D_BlendState blendState
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetDepthStencilState(
 			IntPtr device,
 			ref FNA3D_DepthStencilState depthStencilState
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_ApplyRasterizerState(
 			IntPtr device,
 			ref FNA3D_RasterizerState rasterizerState
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_VerifySampler(
 			IntPtr device,
 			int index,
@@ -344,7 +339,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			ref FNA3D_SamplerState sampler
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_VerifyVertexSampler(
 			IntPtr device,
 			int index,
@@ -352,7 +347,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			ref FNA3D_SamplerState sampler
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern unsafe void FNA3D_ApplyVertexBufferBindings(
 			IntPtr device,
 			FNA3D_VertexBufferBinding* bindings,
@@ -365,7 +360,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Render Targets
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetRenderTargets(
 			IntPtr device,
 			IntPtr renderTargets, /* FNA3D_RenderTargetBinding* */
@@ -375,7 +370,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			byte preserveDepthStencilContents
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern unsafe void FNA3D_SetRenderTargets(
 			IntPtr device,
 			FNA3D_RenderTargetBinding* renderTargets,
@@ -385,7 +380,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			byte preserveDepthStencilContents
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_ResolveTarget(
 			IntPtr device,
 			ref FNA3D_RenderTargetBinding target
@@ -395,13 +390,13 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Backbuffer Functions
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_ResetBackbuffer(
 			IntPtr device,
 			ref FNA3D_PresentationParameters presentationParameters
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_ReadBackbuffer(
 			IntPtr device,
 			int x,
@@ -412,24 +407,24 @@ namespace Microsoft.Xna.Framework.Graphics
 			int dataLen
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetBackbufferSize(
 			IntPtr device,
 			out int w,
 			out int h
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern SurfaceFormat FNA3D_GetBackbufferSurfaceFormat(
 			IntPtr device
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern DepthFormat FNA3D_GetBackbufferDepthFormat(
 			IntPtr device
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern int FNA3D_GetBackbufferMultiSampleCount(
 			IntPtr device
 		);
@@ -439,7 +434,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		#region Textures
 
 		/* IntPtr refers to an FNA3D_Texture* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_CreateTexture2D(
 			IntPtr device,
 			SurfaceFormat format,
@@ -450,7 +445,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		);
 
 		/* IntPtr refers to an FNA3D_Texture* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_CreateTexture3D(
 			IntPtr device,
 			SurfaceFormat format,
@@ -461,7 +456,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		);
 
 		/* IntPtr refers to an FNA3D_Texture* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_CreateTextureCube(
 			IntPtr device,
 			SurfaceFormat format,
@@ -470,13 +465,13 @@ namespace Microsoft.Xna.Framework.Graphics
 			byte isRenderTarget
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_AddDisposeTexture(
 			IntPtr device,
 			IntPtr texture /* FNA3D_Texture* */
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetTextureData2D(
 			IntPtr device,
 			IntPtr texture,
@@ -489,7 +484,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int dataLength
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetTextureData3D(
 			IntPtr device,
 			IntPtr texture,
@@ -504,7 +499,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int dataLength
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetTextureDataCube(
 			IntPtr device,
 			IntPtr texture,
@@ -518,7 +513,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int dataLength
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetTextureDataYUV(
 			IntPtr device,
 			IntPtr y,
@@ -532,7 +527,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int dataLength
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetTextureData2D(
 			IntPtr device,
 			IntPtr texture,
@@ -545,7 +540,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int dataLength
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetTextureData3D(
 			IntPtr device,
 			IntPtr texture,
@@ -560,7 +555,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int dataLength
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetTextureDataCube(
 			IntPtr device,
 			IntPtr texture,
@@ -579,7 +574,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		#region Renderbuffers
 
 		/* IntPtr refers to an FNA3D_Renderbuffer* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_GenColorRenderbuffer(
 			IntPtr device,
 			int width,
@@ -590,7 +585,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		);
 
 		/* IntPtr refers to an FNA3D_Renderbuffer* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_GenDepthStencilRenderbuffer(
 			IntPtr device,
 			int width,
@@ -599,7 +594,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int multiSampleCount
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_AddDisposeRenderbuffer(
 			IntPtr device,
 			IntPtr renderbuffer
@@ -610,7 +605,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		#region Vertex Buffers
 
 		/* IntPtr refers to an FNA3D_Buffer* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_GenVertexBuffer(
 			IntPtr device,
 			byte dynamic,
@@ -618,13 +613,13 @@ namespace Microsoft.Xna.Framework.Graphics
 			int sizeInBytes
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_AddDisposeVertexBuffer(
 			IntPtr device,
 			IntPtr buffer
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetVertexBufferData(
 			IntPtr device,
 			IntPtr buffer,
@@ -636,7 +631,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			SetDataOptions options
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetVertexBufferData(
 			IntPtr device,
 			IntPtr buffer,
@@ -652,7 +647,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		#region Index Buffers
 
 		/* IntPtr refers to an FNA3D_Buffer* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_GenIndexBuffer(
 			IntPtr device,
 			byte dynamic,
@@ -660,13 +655,13 @@ namespace Microsoft.Xna.Framework.Graphics
 			int sizeInBytes
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_AddDisposeIndexBuffer(
 			IntPtr device,
 			IntPtr buffer
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetIndexBufferData(
 			IntPtr device,
 			IntPtr buffer,
@@ -676,7 +671,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			SetDataOptions options
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetIndexBufferData(
 			IntPtr device,
 			IntPtr buffer,
@@ -690,7 +685,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		#region Effects
 
 		/* IntPtr refers to an FNA3D_Effect* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_CreateEffect(
 			IntPtr device,
 			byte[] effectCode,
@@ -700,7 +695,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		);
 
 		/* IntPtr refers to an FNA3D_Effect* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_CloneEffect(
 			IntPtr device,
 			IntPtr cloneSource,
@@ -708,21 +703,21 @@ namespace Microsoft.Xna.Framework.Graphics
 			out IntPtr effectData
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_AddDisposeEffect(
 			IntPtr device,
 			IntPtr effect
 		);
 
 		/* effect refers to a MOJOSHADER_effect*, technique to a MOJOSHADER_effectTechnique* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_SetEffectTechnique(
 			IntPtr device,
 			IntPtr effect,
 			IntPtr technique
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_ApplyEffect(
 			IntPtr device,
 			IntPtr effect,
@@ -730,14 +725,14 @@ namespace Microsoft.Xna.Framework.Graphics
 			IntPtr stateChanges /* MOJOSHADER_effectStateChanges* */
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_BeginPassRestore(
 			IntPtr device,
 			IntPtr effect,
 			IntPtr stateChanges /* MOJOSHADER_effectStateChanges* */
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_EndPassRestore(
 			IntPtr device,
 			IntPtr effect
@@ -748,34 +743,34 @@ namespace Microsoft.Xna.Framework.Graphics
 		#region Queries
 
 		/* IntPtr refers to an FNA3D_Query* */
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern IntPtr FNA3D_CreateQuery(IntPtr device);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_AddDisposeQuery(
 			IntPtr device,
 			IntPtr query
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_QueryBegin(
 			IntPtr device,
 			IntPtr query
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_QueryEnd(
 			IntPtr device,
 			IntPtr query
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern byte FNA3D_QueryComplete(
 			IntPtr device,
 			IntPtr query
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern int FNA3D_QueryPixelCount(
 			IntPtr device,
 			IntPtr query
@@ -785,34 +780,34 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Feature Queries
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern byte FNA3D_SupportsDXT1(IntPtr device);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern byte FNA3D_SupportsS3TC(IntPtr device);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern byte FNA3D_SupportsBC7(IntPtr device);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern byte FNA3D_SupportsHardwareInstancing(
 			IntPtr device
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern byte FNA3D_SupportsNoOverwrite(IntPtr device);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern byte FNA3D_SupportsSRGBRenderTargets(IntPtr device);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_GetMaxTextureSlots(
 			IntPtr device,
 			out int textures,
 			out int vertexTextures
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern int FNA3D_GetMaxMultiSampleCount(
 			IntPtr device,
 			SurfaceFormat format,
@@ -823,7 +818,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Debugging
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		private static extern unsafe void FNA3D_SetStringMarker(
 			IntPtr device,
 			byte* text
@@ -838,7 +833,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			Marshal.FreeHGlobal((IntPtr) utf8Text);
 		}
 		
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		private static extern unsafe void FNA3D_SetTextureName(
 			IntPtr device,
 			IntPtr texture,
@@ -875,7 +870,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate int FNA3D_Image_EOFFunc(IntPtr context);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		private static extern IntPtr FNA3D_Image_Load(
 			FNA3D_Image_ReadFunc readFunc,
 			FNA3D_Image_SkipFunc skipFunc,
@@ -889,7 +884,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			byte zoom
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_Image_Free(IntPtr mem);
 
 		[ObjCRuntime.MonoPInvokeCallback(typeof(FNA3D_Image_ReadFunc))]
@@ -984,7 +979,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			int size
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		private static extern void FNA3D_Image_SavePNG(
 			FNA3D_Image_WriteFunc writeFunc,
 			IntPtr context,
@@ -995,7 +990,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			IntPtr data
 		);
 
-		[DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		private static extern void FNA3D_Image_SaveJPG(
 			FNA3D_Image_WriteFunc writeFunc,
 			IntPtr context,

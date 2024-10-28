@@ -10,6 +10,7 @@
 #region Using Statements
 using System;
 using System.Runtime.InteropServices;
+using MonoGame.Utilities;
 #endregion
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -85,7 +86,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				GraphicsDevice.GLDevice,
 				buffer,
 				offsetInBytes,
-				handle.AddrOfPinnedObject() + (startIndex * MarshalHelper.SizeOf<T>()),
+				handle.AddrOfPinnedObject().Add(startIndex * MarshalHelper.SizeOf<T>()),
 				elementCount * MarshalHelper.SizeOf<T>(),
 				options
 			);
@@ -105,7 +106,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				GraphicsDevice.GLDevice,
 				buffer,
 				0,
-				handle.AddrOfPinnedObject() + (startIndex * MarshalHelper.SizeOf<T>()),
+				handle.AddrOfPinnedObject().Add(startIndex * MarshalHelper.SizeOf<T>()),
 				elementCount * MarshalHelper.SizeOf<T>(),
 				options
 			);

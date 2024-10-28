@@ -11,6 +11,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using MonoGame.Utilities;
 #endregion
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -171,7 +172,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				height,
 				cubeMapFace,
 				level,
-				handle.AddrOfPinnedObject() + startIndex * elementSizeInBytes,
+				handle.AddrOfPinnedObject().Add(startIndex * elementSizeInBytes),
 				elementCount * elementSizeInBytes
 			);
 			handle.Free();
@@ -301,7 +302,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				subH,
 				cubeMapFace,
 				level,
-				handle.AddrOfPinnedObject() + (startIndex * elementSizeInBytes),
+				handle.AddrOfPinnedObject().Add(startIndex * elementSizeInBytes),
 				elementCount * elementSizeInBytes
 			);
 			handle.Free();

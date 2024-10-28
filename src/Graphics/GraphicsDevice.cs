@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using MonoGame.Utilities;
 #endregion
 
 namespace Microsoft.Xna.Framework.Graphics
@@ -851,7 +852,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				y,
 				w,
 				h,
-				handle.AddrOfPinnedObject() + (startIndex * elementSizeInBytes),
+				handle.AddrOfPinnedObject().Add(startIndex * elementSizeInBytes),
 				data.Length * elementSizeInBytes
 			);
 			handle.Free();
@@ -951,18 +952,16 @@ namespace Microsoft.Xna.Framework.Graphics
 				IRenderTarget target = renderTargets[0].RenderTarget as IRenderTarget;
 				unsafe
 				{
-					fixed (FNA3D.FNA3D_RenderTargetBinding* rt = &nativeTargetBindingsNext[0])
-					{
-						PrepareRenderTargetBindings(rt, renderTargets);
-						FNA3D.FNA3D_SetRenderTargets(
-							GLDevice,
-							rt,
-							renderTargets.Length,
-							target.DepthStencilBuffer,
-							target.DepthStencilFormat,
-							(byte) (target.RenderTargetUsage != RenderTargetUsage.DiscardContents ? 1 : 0) /* lol c# */
-						);
-					}
+					FNA3D.FNA3D_RenderTargetBinding* rt = (FNA3D.FNA3D_RenderTargetBinding*) Marshal.UnsafeAddrOfPinnedArrayElement(nativeTargetBindingsNext, 0);
+					PrepareRenderTargetBindings(rt, renderTargets);
+					FNA3D.FNA3D_SetRenderTargets(
+						GLDevice,
+						rt,
+						renderTargets.Length,
+						target.DepthStencilBuffer,
+						target.DepthStencilFormat,
+						(byte) (target.RenderTargetUsage != RenderTargetUsage.DiscardContents ? 1 : 0) /* lol c# */
+					);
 				}
 
 				// Set the viewport/scissor to the size of the first render target.
@@ -1596,26 +1595,24 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		private unsafe void PrepareVertexBindingArray(int baseVertex)
 		{
-			fixed (FNA3D.FNA3D_VertexBufferBinding* b = &nativeBufferBindings[0])
+			FNA3D.FNA3D_VertexBufferBinding* b = (FNA3D.FNA3D_VertexBufferBinding*) Marshal.UnsafeAddrOfPinnedArrayElement(nativeBufferBindings, 0);
+			for (int i = 0; i < vertexBufferCount; i += 1)
 			{
-				for (int i = 0; i < vertexBufferCount; i += 1)
-				{
-					VertexBuffer buffer = vertexBufferBindings[i].VertexBuffer;
-					b[i].vertexBuffer = buffer.buffer;
-					b[i].vertexDeclaration.vertexStride = buffer.VertexDeclaration.VertexStride;
-					b[i].vertexDeclaration.elementCount = buffer.VertexDeclaration.elements.Length;
-					b[i].vertexDeclaration.elements = buffer.VertexDeclaration.elementsPin;
-					b[i].vertexOffset = vertexBufferBindings[i].VertexOffset;
-					b[i].instanceFrequency = vertexBufferBindings[i].InstanceFrequency;
-				}
-				FNA3D.FNA3D_ApplyVertexBufferBindings(
-					GLDevice,
-					b,
-					vertexBufferCount,
-					(byte) (vertexBuffersUpdated ? 1 : 0),
-					baseVertex
-				);
+				VertexBuffer buffer = vertexBufferBindings[i].VertexBuffer;
+				b[i].vertexBuffer = buffer.buffer;
+				b[i].vertexDeclaration.vertexStride = buffer.VertexDeclaration.VertexStride;
+				b[i].vertexDeclaration.elementCount = buffer.VertexDeclaration.elements.Length;
+				b[i].vertexDeclaration.elements = buffer.VertexDeclaration.elementsPin;
+				b[i].vertexOffset = vertexBufferBindings[i].VertexOffset;
+				b[i].instanceFrequency = vertexBufferBindings[i].InstanceFrequency;
 			}
+			FNA3D.FNA3D_ApplyVertexBufferBindings(
+				GLDevice,
+				b,
+				vertexBufferCount,
+				(byte) (vertexBuffersUpdated ? 1 : 0),
+				baseVertex
+			);
 			vertexBuffersUpdated = false;
 		}
 
@@ -1652,23 +1649,20 @@ namespace Microsoft.Xna.Framework.Graphics
 				GLDevice,
 				userVertexBuffer,
 				0,
-				vertexData + offset,
+				vertexData.Add(offset),
 				len,
 				1,
 				1,
 				SetDataOptions.Discard
 			);
-
-			fixed (FNA3D.FNA3D_VertexBufferBinding* b = &nativeBufferBindings[0])
-			{
-				b->vertexBuffer = userVertexBuffer;
-				b->vertexDeclaration.vertexStride = vertexDeclaration.VertexStride;
-				b->vertexDeclaration.elementCount = vertexDeclaration.elements.Length;
-				b->vertexDeclaration.elements = vertexDeclaration.elementsPin;
-				b->vertexOffset = 0;
-				b->instanceFrequency = 0;
-				FNA3D.FNA3D_ApplyVertexBufferBindings(GLDevice, b, 1, 1, 0);
-			}
+			FNA3D.FNA3D_VertexBufferBinding* b = (FNA3D.FNA3D_VertexBufferBinding*) Marshal.UnsafeAddrOfPinnedArrayElement(nativeBufferBindings, 0);
+			b->vertexBuffer = userVertexBuffer;
+			b->vertexDeclaration.vertexStride = vertexDeclaration.VertexStride;
+			b->vertexDeclaration.elementCount = vertexDeclaration.elements.Length;
+			b->vertexDeclaration.elements = vertexDeclaration.elementsPin;
+			b->vertexOffset = 0;
+			b->instanceFrequency = 0;
+			FNA3D.FNA3D_ApplyVertexBufferBindings(GLDevice, b, 1, 1, 0);
 			vertexBuffersUpdated = true;
 		}
 
@@ -1702,7 +1696,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				GLDevice,
 				userIndexBuffer,
 				0,
-				indexData + (indexOffset * indexElementSizeInBytes),
+				indexData.Add(indexOffset * indexElementSizeInBytes),
 				len,
 				SetDataOptions.Discard
 			);

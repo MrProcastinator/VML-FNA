@@ -9,6 +9,7 @@
 
 #region Using Statements
 using System.IO;
+using MonoGame.Utilities;
 #endregion
 
 namespace Microsoft.Xna.Framework.Graphics
