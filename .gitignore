@@ -1,6 +1,7 @@
 bin/
 obj/
 obj_core/
+build*/
 *.pidb
 *.user
 *.userprefs
