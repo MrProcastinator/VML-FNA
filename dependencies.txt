@@ -1,0 +1,37 @@
+Internal dependencies
+
+using Microsoft.Xna.Framework.Media.MediaPlayer;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Design;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
+External libraries dependencies
+
+using SDL2;
+
+Mono dependencies
+
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Xml;
+using System;
+
+Missing dependencies
+
+using System.Text.RegularExpressions;
