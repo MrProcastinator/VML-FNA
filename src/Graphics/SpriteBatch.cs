@@ -1101,8 +1101,8 @@ namespace Microsoft.Xna.Framework.Graphics
 			if (sortMode == SpriteSortMode.Immediate)
 			{
 				int offset;
-				fixed (VertexPositionColorTexture4* sprite = &vertexInfo[0])
 				{
+					VertexPositionColorTexture4* sprite = (VertexPositionColorTexture4*) Marshal.UnsafeAddrOfPinnedArrayElement(vertexInfo, 0);
 					GenerateVertexInfo(
 						sprite,
 						sourceX,
@@ -1149,8 +1149,8 @@ namespace Microsoft.Xna.Framework.Graphics
 			}
 			else if (sortMode == SpriteSortMode.Deferred)
 			{
-				fixed (VertexPositionColorTexture4* sprite = &vertexInfo[numSprites])
 				{
+					VertexPositionColorTexture4* sprite = (VertexPositionColorTexture4*) Marshal.UnsafeAddrOfPinnedArrayElement(vertexInfo, numSprites);
 					GenerateVertexInfo(
 						sprite,
 						sourceX,
@@ -1176,8 +1176,8 @@ namespace Microsoft.Xna.Framework.Graphics
 			}
 			else
 			{
-				fixed (SpriteInfo* spriteInfo = &spriteInfos[numSprites])
 				{
+					SpriteInfo* spriteInfo = (SpriteInfo*) Marshal.UnsafeAddrOfPinnedArrayElement(spriteInfos, numSprites);
 					spriteInfo->textureHash = texture.GetHashCode();
 					spriteInfo->sourceX = sourceX;
 					spriteInfo->sourceY = sourceY;
@@ -1226,10 +1226,10 @@ namespace Microsoft.Xna.Framework.Graphics
 				{
 					comparer = FrontToBackCompare;
 				}
-				fixed (SpriteInfo* spriteInfo = &spriteInfos[0]) {
-				fixed (IntPtr* sortedSpriteInfo = &sortedSpriteInfos[0]) {
-				fixed (VertexPositionColorTexture4* sprites = &vertexInfo[0])
 				{
+					SpriteInfo* spriteInfo = (SpriteInfo*) Marshal.UnsafeAddrOfPinnedArrayElement(spriteInfos, 0);
+					IntPtr* sortedSpriteInfo = (IntPtr*) Marshal.UnsafeAddrOfPinnedArrayElement(sortedSpriteInfos, 0);
+					VertexPositionColorTexture4* sprites = (VertexPositionColorTexture4*) Marshal.UnsafeAddrOfPinnedArrayElement(vertexInfo, 0);
 					for (int i = 0; i < numSprites; i += 1)
 					{
 						sortedSpriteInfo[i] = (IntPtr) (&spriteInfo[i]);
@@ -1263,7 +1263,7 @@ namespace Microsoft.Xna.Framework.Graphics
 							info->effects
 						);
 					}
-				}}}
+				}
 			}
 
 			int arrayOffset = 0;
@@ -1310,8 +1310,8 @@ namespace Microsoft.Xna.Framework.Graphics
 				options = SetDataOptions.NoOverwrite;
 			}
 
-			fixed (VertexPositionColorTexture4* p = &vertexInfo[start])
 			{
+				VertexPositionColorTexture4* p = (VertexPositionColorTexture4*) Marshal.UnsafeAddrOfPinnedArrayElement(vertexInfo, start);
 				/* We use Discard here because the last batch
 				 * may still be executing, and we can't always
 				 * trust the driver to use a staging buffer for
@@ -1398,9 +1398,9 @@ namespace Microsoft.Xna.Framework.Graphics
 				(rotationSin * cornerX) +
 				destinationY
 			);
-			fixed (float* flipX = &CornerOffsetX[0]) {
-			fixed (float* flipY = &CornerOffsetY[0])
 			{
+				float* flipX = (float*) Marshal.UnsafeAddrOfPinnedArrayElement(CornerOffsetX, 0);
+				float* flipY = (float*) Marshal.UnsafeAddrOfPinnedArrayElement(CornerOffsetY, 0);
 				sprite->TextureCoordinate0.X = (flipX[0 ^ effects] * sourceW) + sourceX;
 				sprite->TextureCoordinate0.Y = (flipY[0 ^ effects] * sourceH) + sourceY;
 				sprite->TextureCoordinate1.X = (flipX[1 ^ effects] * sourceW) + sourceX;
@@ -1409,7 +1409,7 @@ namespace Microsoft.Xna.Framework.Graphics
 				sprite->TextureCoordinate2.Y = (flipY[2 ^ effects] * sourceH) + sourceY;
 				sprite->TextureCoordinate3.X = (flipX[3 ^ effects] * sourceW) + sourceX;
 				sprite->TextureCoordinate3.Y = (flipY[3 ^ effects] * sourceH) + sourceY;
-			}}
+			}
 			sprite->Position0.Z = depth;
 			sprite->Position1.Z = depth;
 			sprite->Position2.Z = depth;

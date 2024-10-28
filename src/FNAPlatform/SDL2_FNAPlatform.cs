@@ -1737,14 +1737,12 @@ namespace Microsoft.Xna.Framework
 			int offset,
 			int count
 		) {
-			fixed (byte* ptr = &buffer[offset])
-			{
-				return (int) SDL.SDL_DequeueAudio(
-					handle,
-					(IntPtr) ptr,
-					(uint) count
-				);
-			}
+			byte* ptr = (byte*)Marshal.UnsafeAddrOfPinnedArrayElement(buffer, offset);
+			return (int) SDL.SDL_DequeueAudio(
+				handle,
+				(IntPtr) ptr,
+				(uint) count
+			);
 		}
 
 		public static int GetMicrophoneQueuedBytes(uint handle)

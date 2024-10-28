@@ -192,21 +192,19 @@ namespace Microsoft.Xna.Framework.Media
 
 			unsafe
 			{
-				fixed (FNA3D.FNA3D_RenderTargetBinding* rt = &nativeVideoTexture[0])
-				{
-					GraphicsDevice.PrepareRenderTargetBindings(
-						rt,
-						videoTexture
-					);
-					FNA3D.FNA3D_SetRenderTargets(
-						currentDevice.GLDevice,
-						rt,
-						videoTexture.Length,
-						IntPtr.Zero,
-						DepthFormat.None,
-						0
-					);
-				}
+				FNA3D.FNA3D_RenderTargetBinding* rt = (FNA3D.FNA3D_RenderTargetBinding*) Marshal.UnsafeAddrOfPinnedArrayElement(nativeVideoTexture, 0);
+				GraphicsDevice.PrepareRenderTargetBindings(
+					rt,
+					videoTexture
+				);
+				FNA3D.FNA3D_SetRenderTargets(
+					currentDevice.GLDevice,
+					rt,
+					videoTexture.Length,
+					IntPtr.Zero,
+					DepthFormat.None,
+					0
+				);
 			}
 
 			// Prep render state
@@ -261,21 +259,20 @@ namespace Microsoft.Xna.Framework.Media
 
 				unsafe
 				{
-					fixed (FNA3D.FNA3D_RenderTargetBinding* rt = &nativeOldTargets[0])
-					{
-						GraphicsDevice.PrepareRenderTargetBindings(
-							rt,
-							oldTargets
-						);
-						FNA3D.FNA3D_SetRenderTargets(
-							currentDevice.GLDevice,
-							rt,
-							oldTargets.Length,
-							oldTarget.DepthStencilBuffer,
-							oldTarget.DepthStencilFormat,
-							(byte) (oldTarget.RenderTargetUsage != RenderTargetUsage.DiscardContents ? 1 : 0) /* lol c# */
-						);
-					}
+					FNA3D.FNA3D_RenderTargetBinding* rt = (FNA3D.FNA3D_RenderTargetBinding*)Marshal.UnsafeAddrOfPinnedArrayElement(nativeOldTargets, 0);
+
+					GraphicsDevice.PrepareRenderTargetBindings(
+						rt,
+						oldTargets
+					);
+					FNA3D.FNA3D_SetRenderTargets(
+						currentDevice.GLDevice,
+						rt,
+						oldTargets.Length,
+						oldTarget.DepthStencilBuffer,
+						oldTarget.DepthStencilFormat,
+						(byte) (oldTarget.RenderTargetUsage != RenderTargetUsage.DiscardContents ? 1 : 0) /* lol c# */
+					);
 				}
 			}
 			oldTargets = null;
