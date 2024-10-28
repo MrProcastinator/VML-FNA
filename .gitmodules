@@ -1,15 +1,15 @@
 [submodule "lib/SDL2-CS"]
 	path = lib/SDL2-CS
-	url = https://github.com/flibitijibibo/SDL2-CS
+	url = https://github.com/MrProcastinator/VML-SDL2
 [submodule "lib/FAudio"]
 	path = lib/FAudio
-	url = https://github.com/FNA-XNA/FAudio
+	url = https://github.com/MrProcastinator/VML-FAudio
 [submodule "lib/FNA3D"]
 	path = lib/FNA3D
-	url = https://github.com/FNA-XNA/FNA3D
+	url = https://github.com/MrProcastinator/VML-FNA3D
 [submodule "lib/Theorafile"]
 	path = lib/Theorafile
-	url = https://github.com/FNA-XNA/Theorafile
+	url = https://github.com/MrProcastinator/VML-Theorafile
 [submodule "lib/SDL3-CS"]
 	path = lib/SDL3-CS
 	url = https://github.com/flibitijibibo/SDL3-CS.git
