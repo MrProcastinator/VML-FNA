@@ -19,9 +19,16 @@ namespace Microsoft.Xna.Framework.Graphics
 	[System.Security.SuppressUnmanagedCodeSecurity]
 	internal static class FNA3D
 	{
+		#region Aligment constants
+
+		/* Needed for PSVita structs */
+		const int ARCH_ALIGNMENT = 1;
+
+		#endregion
+
 		#region Native Structures
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_Viewport
 		{
 			public int x;
@@ -32,7 +39,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			public float maxDepth;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_BlendState
 		{
 			public Blend colorSourceBlend;
@@ -49,7 +56,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			public int multiSampleMask;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_DepthStencilState
 		{
 			public byte depthBufferEnable;
@@ -70,7 +77,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			public int referenceStencil;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_RasterizerState
 		{
 			public FillMode fillMode;
@@ -81,7 +88,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			public byte multiSampleAntiAlias;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_SamplerState
 		{
 			public TextureFilter filter;
@@ -93,7 +100,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			public int maxMipLevel;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_VertexDeclaration
 		{
 			public int vertexStride;
@@ -101,7 +108,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			public IntPtr elements; /* FNA3D_VertexElement* */
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_VertexBufferBinding
 		{
 			public IntPtr vertexBuffer; /* FNA3D_Buffer* */
@@ -110,7 +117,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			public int instanceFrequency;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_RenderTargetBinding
 		{
 			public byte type;
@@ -122,7 +129,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			public IntPtr colorBuffer;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, Pack = ARCH_ALIGNMENT)]
 		public struct FNA3D_PresentationParameters
 		{
 			public int backBufferWidth;
