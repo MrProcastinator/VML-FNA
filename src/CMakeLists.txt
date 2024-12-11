@@ -122,6 +122,7 @@ set(FNA_SOURCES
 	"FNAPlatform/FNAWindow.cs"
 	"FNAPlatform/SDL2_FNAPlatform.cs"
 	"FNAPlatform/SDL3_FNAPlatform_Stub.cs"
+	"FNAPlatform/Vita_FNAPlatform.cs"
 	"FrameworkDispatcher.cs"
 	"Game.cs"
 	"GameComponent.cs"
@@ -358,6 +359,7 @@ set(LIBRARY_NAME FNA)
 compile_mono_assembly_aot(
     ASSEMBLY ${LIBRARY_NAME}
     SOURCES ${FNA_SOURCES}
+	RESOURCES ${FNA_RESOURCES}
     CONFIG "../app.config"
     DEFINES ${FNA_DEFINES}
     REFERENCES ${FNA_REFERENCES}

@@ -39,6 +39,10 @@ namespace Microsoft.Xna.Framework
 			/* I'll do it without #if anyways :^)
 			* -MrProcastinator
 			*/
+			
+			FNALoggerEXT.LogError = Vita_FNAPlatform.TextFile.LogError;
+			FNALoggerEXT.LogWarn = Vita_FNAPlatform.TextFile.LogWarn;
+			FNALoggerEXT.LogInfo = Vita_FNAPlatform.TextFile.LogInfo;
 
 			bool useSDL3 = Environment.GetEnvironmentVariable("FNA_PLATFORM_BACKEND") == "SDL3";
 
@@ -231,7 +235,9 @@ namespace Microsoft.Xna.Framework
 			/* Do this AFTER ProgramInit so the platform library
 			 * has a chance to load first!
 			 */
-			// FNALoggerEXT.HookFNA3D();
+			/* Somehow this crashes the PSVita when used
+			FNALoggerEXT.HookFNA3D();
+			*/
 		}
 
 		#endregion
