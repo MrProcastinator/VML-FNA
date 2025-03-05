@@ -324,6 +324,8 @@ set(FNA_SOURCES
 	"Vector2.cs"
 	"Vector3.cs"
 	"Vector4.cs"
+# Debug only
+	"Utilities/DebugUtils.cs"
 )
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
@@ -364,6 +366,7 @@ compile_mono_assembly_aot(
     DEFINES ${FNA_DEFINES}
     REFERENCES ${FNA_REFERENCES}
     FLAGS unsafe ${MONO_RELEASE_TYPE}
+    OPTIMIZE
 )
 add_library(VML${LIBRARY_NAME} STATIC
     ${LIBRARY_NAME}.c
