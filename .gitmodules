@@ -13,3 +13,6 @@
 [submodule "lib/SDL3-CS"]
 	path = lib/SDL3-CS
 	url = https://github.com/flibitijibibo/SDL3-CS.git
+[submodule "cmake/VML"]
+	path = cmake/VML
+	url = https://github.com/MrProcastinator/VML-CMakeScripts.git
