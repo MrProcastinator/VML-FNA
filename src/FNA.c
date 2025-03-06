@@ -11,11 +11,18 @@
 #include <mono/metadata/appdomain.h>
 #include <mono/mini/jit.h>
 
+#include <VML/VMLTools.h>
+
 #include "../lib/FNA3D/include/FNA3D.h"
 #include "../lib/FNA3D/include/FNA3D_Image.h"
 #include "../lib/FNA3D/include/FNA3D_SysRenderer.h"
 
 extern void** mono_aot_module_FNA_info;
+
+static void FNA3D_CreateEffect_wrapped(FNA3D_Device* device, uint8_t* effectCode, uint32_t length, FNA3D_Effect** effect, MOJOSHADER_effect** effectData)
+{
+    FNA3D_CreateEffect(device, VML_MARSHAL_ARRAY(uint8_t, effectCode), length, effect, effectData);
+}
 
 void VMLFNARegister()
 {
@@ -27,9 +34,6 @@ void VMLFNARegister()
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_GetDrawableSize", FNA3D_GetDrawableSize);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_CreateDevice", FNA3D_CreateDevice);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_DestroyDevice", FNA3D_DestroyDevice);
-    mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SwapBuffers", FNA3D_SwapBuffers);
-    mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SwapBuffers", FNA3D_SwapBuffers);
-    mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SwapBuffers", FNA3D_SwapBuffers);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SwapBuffers", FNA3D_SwapBuffers);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_Clear", FNA3D_Clear);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_DrawIndexedPrimitives", FNA3D_DrawIndexedPrimitives);
@@ -80,7 +84,7 @@ void VMLFNARegister()
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_AddDisposeIndexBuffer", FNA3D_AddDisposeIndexBuffer);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SetIndexBufferData", FNA3D_SetIndexBufferData);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_GetIndexBufferData", FNA3D_GetIndexBufferData);
-    mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_CreateEffect", FNA3D_CreateEffect);
+    mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_CreateEffect", FNA3D_CreateEffect_wrapped);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_CloneEffect", FNA3D_CloneEffect);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_AddDisposeEffect", FNA3D_AddDisposeEffect);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SetEffectTechnique", FNA3D_SetEffectTechnique);
