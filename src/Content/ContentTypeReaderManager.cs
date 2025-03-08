@@ -56,7 +56,8 @@ namespace Microsoft.Xna.Framework.Content
 		{
 			locker = new object();
 			contentReadersCache = new Dictionary<Type, ContentTypeReader>(255);
-			assemblyName = typeof(ContentTypeReaderManager).Assembly.FullName;
+			// TODO: Replaced Assembly.FullName due to errors, harcoding it and bump it with new versions
+			assemblyName = "FNA, Version=24.10.0.0, Culture=neutral, PublicKeyToken=null";
 		}
 
 		#endregion
