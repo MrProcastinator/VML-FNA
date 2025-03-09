@@ -416,7 +416,7 @@ namespace Microsoft.Xna.Framework
 		{
 			// Set and initialize the SDL2 window
 			SDL.SDL_WindowFlags initFlags = (
-				SDL.SDL_WindowFlags.SDL_WINDOW_HIDDEN |
+				SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN |
 				SDL.SDL_WindowFlags.SDL_WINDOW_INPUT_FOCUS |
 				SDL.SDL_WindowFlags.SDL_WINDOW_MOUSE_FOCUS
 			) | (SDL.SDL_WindowFlags) FNA3D.FNA3D_PrepareWindowAttributes();
