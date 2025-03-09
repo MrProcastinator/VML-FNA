@@ -11,11 +11,11 @@
 #include <mono/metadata/appdomain.h>
 #include <mono/mini/jit.h>
 
-extern void** mono_aot_module_FNA_info;
+extern void** mono_aot_module_FNA_NoSong_info;
 extern void VMLFNARegisterCalls();
 
 void VMLFNARegister()
 {
-    mono_aot_register_module(mono_aot_module_FNA_info);
+    mono_aot_register_module(mono_aot_module_FNA_NoSong_info);
     VMLFNARegisterCalls();
 }

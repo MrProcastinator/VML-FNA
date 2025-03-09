@@ -151,7 +151,9 @@ namespace Microsoft.Xna.Framework.Content
 				EffectMaterialReader hEffectMaterialReader = new EffectMaterialReader();
 				ExternalReferenceReader hExternalReferenceReader = new ExternalReferenceReader();
 				SoundEffectReader hSoundEffectReader = new SoundEffectReader();
+#if !DISABLE_SONG				
 				SongReader hSongReader = new SongReader();
+#endif
 				ModelReader hModelReader = new ModelReader();
 				Int32Reader hInt32Reader = new Int32Reader();
 			}

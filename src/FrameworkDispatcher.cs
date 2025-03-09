@@ -12,7 +12,9 @@ using System.Collections.Generic;
 
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input.Touch;
+#if !DISABLE_SONG
 using MediaPlayer = Microsoft.Xna.Framework.Media.MediaPlayer;
+#endif
 #endregion
 
 namespace Microsoft.Xna.Framework
@@ -53,7 +55,7 @@ namespace Microsoft.Xna.Framework
 					Microphone.micList[i].CheckBuffer();
 				}
 			}
-
+#if !DISABLE_SONG
 			MediaPlayer.Update();
 			if (ActiveSongChanged)
 			{
@@ -65,13 +67,12 @@ namespace Microsoft.Xna.Framework
 				MediaPlayer.OnMediaStateChanged();
 				MediaStateChanged = false;
 			}
-
+#endif
 			if (TouchPanel.TouchDeviceExists)
 			{
 				TouchPanel.Update();
 			}
 		}
-
 		#endregion
 	}
 }

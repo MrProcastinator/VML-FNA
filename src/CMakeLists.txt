@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(src ASM)
 
-set(FNA_SOURCES
+set(FNA_BASE_SOURCES
     "Audio/AudioCategory.cs"
 	"Audio/AudioChannels.cs"
 	"Audio/AudioEmitter.cs"
@@ -69,7 +69,6 @@ set(FNA_SOURCES
 	"Content/ContentReaders/SByteReader.cs"
 	"Content/ContentReaders/SingleReader.cs"
 	"Content/ContentReaders/SkinnedEffectReader.cs"
-	"Content/ContentReaders/SongReader.cs"
 	"Content/ContentReaders/SoundEffectReader.cs"
 	"Content/ContentReaders/SpriteFontReader.cs"
 	"Content/ContentReaders/StringReader.cs"
@@ -86,7 +85,6 @@ set(FNA_SOURCES
 	"Content/ContentReaders/Vector4Reader.cs"
 	"Content/ContentReaders/VertexBufferReader.cs"
 	"Content/ContentReaders/VertexDeclarationReader.cs"
-	"Content/ContentReaders/VideoReader.cs"
 	"Content/ContentSerializerAttribute.cs"
 	"Content/ContentSerializerCollectionItemNameAttribute.cs"
 	"Content/ContentSerializerIgnoreAttribute.cs"
@@ -290,15 +288,6 @@ set(FNA_SOURCES
 	"LaunchParameters.cs"
 	"MathHelper.cs"
 	"Matrix.cs"
-	"Media/MediaPlayer.cs"
-	"Media/MediaQueue.cs"
-	"Media/MediaState.cs"
-	"Media/Song.cs"
-	"Media/SongCollection.cs"
-	"Media/VideoSoundtrackType.cs"
-	"Media/VisualizationData.cs"
-	"Media/Xiph/Video.cs"
-	"Media/Xiph/VideoPlayer.cs"
 	"NamespaceDocs.cs"
 	"Plane.cs"
 	"PlaneIntersectionType.cs"
@@ -328,6 +317,26 @@ set(FNA_SOURCES
 	"Utilities/DebugUtils.cs"
 )
 
+set(FNA_MEDIA_SHARED_SOURCES
+	"Media/MediaState.cs"
+)
+
+set(FNA_THEORA_SOURCES
+	"Content/ContentReaders/VideoReader.cs"
+	"Media/Xiph/Video.cs"
+	"Media/Xiph/VideoPlayer.cs"
+	"Media/VideoSoundtrackType.cs"
+)
+
+set(FNA_SONG_SOURCES
+	"Content/ContentReaders/SongReader.cs"
+	"Media/Song.cs"
+	"Media/SongCollection.cs"
+	"Media/MediaPlayer.cs"
+	"Media/MediaQueue.cs"
+	"Media/VisualizationData.cs"
+)
+
 if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
   set(MONO_RELEASE_TYPE debug)
   set(FNA_DEFINES DEBUG)
@@ -336,13 +345,15 @@ else()
   set(FNA_DEFINES "")
 endif()
 
-set(FNA_REFERENCES
+set(FNA_BASE_REFERENCES
     FAudio-CS.dll
-    Theorafile.dll
     SDL2.dll
-    SDL2_image.dll
-    SDL2_mixer.dll
 )
+
+set(FNA_THEORA_REFERENCES
+	Theorafile.dll
+)
+
 
 set(RESDIR "Graphics/Effect/StockEffects/FXB")
 set(RESNAME "Microsoft.Xna.Framework.Graphics.Effect.Resources")
@@ -358,31 +369,94 @@ set(FNA_RESOURCES
 )
 
 set(LIBRARY_NAME FNA)
+# Full library
 compile_mono_assembly_aot(
     ASSEMBLY ${LIBRARY_NAME}
-    SOURCES ${FNA_SOURCES}
+    SOURCES ${FNA_BASE_SOURCES} ${FNA_MEDIA_SHARED_SOURCES} ${FNA_THEORA_SOURCES} ${FNA_SONG_SOURCES}
 	RESOURCES ${FNA_RESOURCES}
     CONFIG "../app.config"
     DEFINES ${FNA_DEFINES}
-    REFERENCES ${FNA_REFERENCES}
+    REFERENCES ${FNA_BASE_REFERENCES} ${FNA_THEORA_REFERENCES}
     FLAGS unsafe ${MONO_RELEASE_TYPE}
     OPTIMIZE
 )
 add_library(VML${LIBRARY_NAME} STATIC
     ${LIBRARY_NAME}.c
+	${LIBRARY_NAME}_external.c
     ${LIBRARY_NAME}.dll.s
 )
 
+# No Theorafile
+compile_mono_assembly_aot(
+    ASSEMBLY ${LIBRARY_NAME}.NoTheora
+    SOURCES ${FNA_BASE_SOURCES} ${FNA_MEDIA_SHARED_SOURCES} ${FNA_SONG_SOURCES}
+	RESOURCES ${FNA_RESOURCES}
+    CONFIG "../app.config"
+    DEFINES ${FNA_DEFINES} DISABLE_THEORA
+    REFERENCES ${FNA_BASE_REFERENCES}
+    FLAGS unsafe ${MONO_RELEASE_TYPE}
+    OPTIMIZE
+)
+add_library(VML${LIBRARY_NAME}_NoTheora STATIC
+    ${LIBRARY_NAME}_NoTheora.c
+	${LIBRARY_NAME}_external.c
+    ${LIBRARY_NAME}.NoTheora.dll.s
+)
+
+# No Song
+compile_mono_assembly_aot(
+    ASSEMBLY ${LIBRARY_NAME}.NoSong
+    SOURCES ${FNA_BASE_SOURCES} ${FNA_MEDIA_SHARED_SOURCES} ${FNA_THEORA_SOURCES}
+	RESOURCES ${FNA_RESOURCES}
+    CONFIG "../app.config"
+    DEFINES ${FNA_DEFINES} DISABLE_SONG
+    REFERENCES ${FNA_BASE_REFERENCES} ${FNA_THEORA_REFERENCES}
+    FLAGS unsafe ${MONO_RELEASE_TYPE}
+    OPTIMIZE
+)
+add_library(VML${LIBRARY_NAME}_NoSong STATIC
+    ${LIBRARY_NAME}_NoSong.c
+	${LIBRARY_NAME}_external.c
+    ${LIBRARY_NAME}.NoSong.dll.s
+)
+
+# No Theorafile and no song
+compile_mono_assembly_aot(
+    ASSEMBLY ${LIBRARY_NAME}.NoTheora.NoSong
+    SOURCES ${FNA_BASE_SOURCES}
+	RESOURCES ${FNA_RESOURCES}
+    CONFIG "../app.config"
+    DEFINES ${FNA_DEFINES} DISABLE_THEORA DISABLE_SONG
+    REFERENCES ${FNA_BASE_REFERENCES}
+    FLAGS unsafe ${MONO_RELEASE_TYPE}
+    OPTIMIZE
+)
+add_library(VML${LIBRARY_NAME}_NoTheora_NoSong STATIC
+    ${LIBRARY_NAME}_NoTheora_NoSong.c
+	${LIBRARY_NAME}_external.c
+    ${LIBRARY_NAME}.NoTheora.NoSong.dll.s
+)
+
 add_dependencies(VML${LIBRARY_NAME} FNADependencies)
+add_dependencies(VML${LIBRARY_NAME}_NoTheora FNADependencies)
+add_dependencies(VML${LIBRARY_NAME}_NoSong FNADependencies)
+add_dependencies(VML${LIBRARY_NAME}_NoTheora_NoSong FNADependencies)
 
 install(
-  TARGETS VML${LIBRARY_NAME}
+  TARGETS
+  	VML${LIBRARY_NAME}
+	VML${LIBRARY_NAME}_NoTheora
+	VML${LIBRARY_NAME}_NoSong
+	VML${LIBRARY_NAME}_NoTheora_NoSong
   DESTINATION lib
 )
 
 install(
   FILES 
     ${CMAKE_BINARY_DIR}/${LIBRARY_NAME}.dll
+	${CMAKE_BINARY_DIR}/${LIBRARY_NAME}.NoTheora.dll
+	${CMAKE_BINARY_DIR}/${LIBRARY_NAME}.NoSong.dll
+	${CMAKE_BINARY_DIR}/${LIBRARY_NAME}.NoTheora.NoSong.dll
   DESTINATION lib/mono
 )
 

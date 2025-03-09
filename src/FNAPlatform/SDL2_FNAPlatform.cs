@@ -381,7 +381,9 @@ namespace Microsoft.Xna.Framework
 			{
 				SoundEffect.FAudioContext.Context.Dispose();
 			}
+#if !DISABLE_SONG
 			Media.MediaPlayer.DisposeIfNecessary();
+#endif
 
 			// This _should_ be the last SDL call we make...
 			SDL.SDL_QuitSubSystem(

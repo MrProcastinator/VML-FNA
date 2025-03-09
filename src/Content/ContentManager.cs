@@ -16,7 +16,9 @@ using System.Reflection;
 
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+#if !DISABLE_SONG || !DISABLE_THEORA
 using Microsoft.Xna.Framework.Media;
+#endif
 #endregion
 
 namespace Microsoft.Xna.Framework.Content
@@ -367,6 +369,7 @@ namespace Microsoft.Xna.Framework.Content
 					effect.Name = assetName;
 					result = effect;
 				}
+#if !DISABLE_SONG
 				else if (typeof(T) == typeof(Song))
 				{
 					// Song can't use the stream, get the file name and free the handle
@@ -375,6 +378,8 @@ namespace Microsoft.Xna.Framework.Content
 
 					result = new Song(fileName);
 				}
+#endif
+#if !DISABLE_THEORA
 				else if (typeof(T) == typeof(Video))
 				{
 					// Video can't use the stream, get the file name and free the handle
@@ -388,6 +393,7 @@ namespace Microsoft.Xna.Framework.Content
 						" does not have an XNB file! Hacking Duration property!"
 					);
 				}
+#endif
 				else
 				{
 					stream.Close();
@@ -646,14 +652,18 @@ namespace Microsoft.Xna.Framework.Content
 			{
 				return CheckRawExtensions(assetName, effectExtensions);
 			}
+#if !DISABLE_SONG
 			else if (typeof(T) == typeof(Song))
 			{
 				return CheckRawExtensions(assetName, SongReader.supportedExtensions);
 			}
+#endif
+#if !DISABLE_THEORA
 			else if (typeof(T) == typeof(Video))
 			{
 				return CheckRawExtensions(assetName, VideoReader.supportedExtensions);
 			}
+#endif
 			return null;
 		}
 
