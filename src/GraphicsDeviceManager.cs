@@ -164,8 +164,9 @@ namespace Microsoft.Xna.Framework
 
 		#region Public Static Fields
 
-		public static readonly int DefaultBackBufferWidth = 800;
-		public static readonly int DefaultBackBufferHeight = 480;
+		/* Defailt PSVita screen size */
+		public static readonly int DefaultBackBufferWidth = 960;
+		public static readonly int DefaultBackBufferHeight = 544;
 
 		#endregion
 
