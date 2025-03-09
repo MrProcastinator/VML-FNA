@@ -194,9 +194,9 @@ namespace Microsoft.Xna.Framework.Graphics
 		{
 			if (!IsDisposed)
 			{
-				spriteEffect.Dispose();
-				indexBuffer.Dispose();
-				vertexBuffer.Dispose();
+				if(spriteEffect != null) spriteEffect.Dispose();
+				if(indexBuffer != null) indexBuffer.Dispose();
+				if(vertexBuffer != null) vertexBuffer.Dispose();
 			}
 			base.Dispose(disposing);
 		}
