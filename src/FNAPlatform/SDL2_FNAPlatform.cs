@@ -754,57 +754,58 @@ namespace Microsoft.Xna.Framework
 
 		private static void INTERNAL_SetIcon(IntPtr window, string title)
 		{
-			string fileIn = String.Empty;
+			// No need to use an icon on PSVita ;)
+			// string fileIn = String.Empty;
 
-			/* If the game's using SDL2_image, provide the option to use a PNG
-			 * instead of a BMP. Nice for anyone who cares about transparency.
-			 * -flibit
-			 */
-			try
-			{
-				fileIn = INTERNAL_GetIconName(title + ".png");
-				if (!String.IsNullOrEmpty(fileIn))
-				{
-					int w, h, len;
-					IntPtr pixels, icon;
-					using (Stream stream = TitleContainer.OpenStream(fileIn))
-					{
-						pixels = FNA3D.ReadImageStream(
-							stream,
-							out w,
-							out h,
-							out len
-						);
-						icon = SDL.SDL_CreateRGBSurfaceFrom(
-							pixels,
-							w,
-							h,
-							8 * 4,
-							w * 4,
-							0x000000FF,
-							0x0000FF00,
-							0x00FF0000,
-							0xFF000000
-						);
-					}
-					SDL.SDL_SetWindowIcon(window, icon);
-					SDL.SDL_FreeSurface(icon);
-					FNA3D.FNA3D_Image_Free(pixels);
-					return;
-				}
-			}
-			catch(DllNotFoundException)
-			{
-				// Not that big a deal guys.
-			}
+			// /* If the game's using SDL2_image, provide the option to use a PNG
+			//  * instead of a BMP. Nice for anyone who cares about transparency.
+			//  * -flibit
+			//  */
+			// try
+			// {
+			// 	fileIn = INTERNAL_GetIconName(title + ".png");
+			// 	if (!String.IsNullOrEmpty(fileIn))
+			// 	{
+			// 		int w, h, len;
+			// 		IntPtr pixels, icon;
+			// 		using (Stream stream = TitleContainer.OpenStream(fileIn))
+			// 		{
+			// 			pixels = FNA3D.ReadImageStream(
+			// 				stream,
+			// 				out w,
+			// 				out h,
+			// 				out len
+			// 			);
+			// 			icon = SDL.SDL_CreateRGBSurfaceFrom(
+			// 				pixels,
+			// 				w,
+			// 				h,
+			// 				8 * 4,
+			// 				w * 4,
+			// 				0x000000FF,
+			// 				0x0000FF00,
+			// 				0x00FF0000,
+			// 				0xFF000000
+			// 			);
+			// 		}
+			// 		SDL.SDL_SetWindowIcon(window, icon);
+			// 		SDL.SDL_FreeSurface(icon);
+			// 		FNA3D.FNA3D_Image_Free(pixels);
+			// 		return;
+			// 	}
+			// }
+			// catch(DllNotFoundException)
+			// {
+			// 	// Not that big a deal guys.
+			// }
 
-			fileIn = INTERNAL_GetIconName(title + ".bmp");
-			if (!String.IsNullOrEmpty(fileIn))
-			{
-				IntPtr icon = SDL.SDL_LoadBMP(fileIn);
-				SDL.SDL_SetWindowIcon(window, icon);
-				SDL.SDL_FreeSurface(icon);
-			}
+			// fileIn = INTERNAL_GetIconName(title + ".bmp");
+			// if (!String.IsNullOrEmpty(fileIn))
+			// {
+			// 	IntPtr icon = SDL.SDL_LoadBMP(fileIn);
+			// 	SDL.SDL_SetWindowIcon(window, icon);
+			// 	SDL.SDL_FreeSurface(icon);
+			// }
 		}
 
 		private static string INTERNAL_GetIconName(string title)
