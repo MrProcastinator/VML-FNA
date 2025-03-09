@@ -23,6 +23,24 @@ namespace Microsoft.Xna.Framework
 {
 	internal static class Vita_FNAPlatform
 	{
+        internal static class SDL
+        {
+            public static void LogWarn(string msg)
+            {
+                SDL2.SDL.SDL_LogMessage((int)SDL2.SDL.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION, SDL2.SDL.SDL_LogPriority.SDL_LOG_PRIORITY_WARN, msg);
+            }
+
+            public static void LogError(string msg)
+            {
+                SDL2.SDL.SDL_LogMessage((int)SDL2.SDL.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION, SDL2.SDL.SDL_LogPriority.SDL_LOG_PRIORITY_ERROR, msg);
+            }
+
+            public static void LogInfo(string msg)
+            {
+                SDL2.SDL.SDL_LogMessage((int)SDL2.SDL.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION, SDL2.SDL.SDL_LogPriority.SDL_LOG_PRIORITY_INFO, msg);
+            }
+        }
+
         internal static class TextFile
         {
             private const string LOG_FILE = "ux0:/data/FNA_log.txt";

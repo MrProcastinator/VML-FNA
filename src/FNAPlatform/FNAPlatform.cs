@@ -40,9 +40,9 @@ namespace Microsoft.Xna.Framework
 			* -MrProcastinator
 			*/
 			
-			FNALoggerEXT.LogError = Vita_FNAPlatform.TextFile.LogError;
-			FNALoggerEXT.LogWarn = Vita_FNAPlatform.TextFile.LogWarn;
-			FNALoggerEXT.LogInfo = Vita_FNAPlatform.TextFile.LogInfo;
+			FNALoggerEXT.LogError = Vita_FNAPlatform.SDL.LogError;
+			FNALoggerEXT.LogWarn = Vita_FNAPlatform.SDL.LogWarn;
+			FNALoggerEXT.LogInfo = Vita_FNAPlatform.SDL.LogInfo;
 
 			bool useSDL3 = Environment.GetEnvironmentVariable("FNA_PLATFORM_BACKEND") == "SDL3";
 
