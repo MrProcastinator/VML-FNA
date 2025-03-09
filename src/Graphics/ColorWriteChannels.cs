@@ -17,7 +17,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// Defines the color channels for render target blending operations.
 	/// </summary>
 	[Flags]
-	public enum ColorWriteChannels
+	public enum ColorWriteChannels : sbyte
 	{
 		/// <summary>
 		/// No channels selected.

@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines formats for depth-stencil buffer.
 	/// </summary>
-	public enum DepthFormat
+	public enum DepthFormat : uint
 	{
 		/// <summary>
 		/// Depth-stencil buffer will not be created.

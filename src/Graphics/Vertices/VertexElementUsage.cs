@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines usage for vertex elements.
 	/// </summary>
-	public enum VertexElementUsage
+	public enum VertexElementUsage : sbyte
 	{
 		/// <summary>
 		/// Position data.

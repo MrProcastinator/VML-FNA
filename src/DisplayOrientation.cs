@@ -17,7 +17,7 @@ namespace Microsoft.Xna.Framework
 	/// Defines the orientation of the display.
 	/// </summary>
 	[Flags]
-	public enum DisplayOrientation
+	public enum DisplayOrientation : sbyte
 	{
 		/// <summary>
 		/// The default orientation.

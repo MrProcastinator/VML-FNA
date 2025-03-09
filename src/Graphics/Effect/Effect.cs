@@ -1091,7 +1091,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		/* Shader Parse Interface */
 
-		private enum MOJOSHADER_symbolClass
+		private enum MOJOSHADER_symbolClass : byte
 		{
 			MOJOSHADER_SYMCLASS_SCALAR = 0,
 			MOJOSHADER_SYMCLASS_VECTOR,
@@ -1102,7 +1102,7 @@ namespace Microsoft.Xna.Framework.Graphics
 			MOJOSHADER_SYMCLASS_TOTAL
 		}
 
-		private enum MOJOSHADER_symbolType
+		private enum MOJOSHADER_symbolType : byte
 		{
 			MOJOSHADER_SYMTYPE_VOID = 0,
 			MOJOSHADER_SYMTYPE_BOOL,

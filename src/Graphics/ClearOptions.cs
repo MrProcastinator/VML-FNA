@@ -17,7 +17,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// Defines the buffers for clearing when calling <see cref="GraphicsDevice.Clear"/> operation.
 	/// </summary>
 	[Flags]
-	public enum ClearOptions
+	public enum ClearOptions : sbyte
 	{
 		/// <summary>
 		/// Color buffer.

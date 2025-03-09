@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines how vertex data is ordered.
 	/// </summary>
-	public enum PrimitiveType
+	public enum PrimitiveType : sbyte
 	{
 		/// <summary>
 		/// Renders the specified vertices as a sequence of isolated triangles. Each group of three vertices defines a separate triangle. Back-face culling is affected by the current winding-order render state.

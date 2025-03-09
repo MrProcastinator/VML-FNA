@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// The comparison function used for depth, stencil, and alpha tests.
 	/// </summary>
-	public enum CompareFunction
+	public enum CompareFunction : sbyte
 	{
 		/// <summary>
 		/// Always passes the test.

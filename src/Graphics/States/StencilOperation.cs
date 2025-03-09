@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines stencil buffer operations.
 	/// </summary>
-	public enum StencilOperation
+	public enum StencilOperation : sbyte
 	{
 		/// <summary>
 		/// Does not update the stencil buffer entry.

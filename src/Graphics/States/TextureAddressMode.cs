@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines modes for addressing texels using texture coordinates that are outside of the range of 0.0 to 1.0.
 	/// </summary>
-	public enum TextureAddressMode
+	public enum TextureAddressMode : sbyte
 	{
 		/// <summary>
 		/// Texels outside range will form the tile at every integer junction.

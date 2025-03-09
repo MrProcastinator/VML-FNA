@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines a blend mode.
 	/// </summary>
-	public enum Blend
+	public enum Blend : sbyte
 	{
 		/// <summary>
 		/// Each component of the color is multiplied by {1, 1, 1, 1}.

@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines the faces in a cube map for the <see cref="TextureCube"/> class.
 	/// </summary>
-	public enum CubeMapFace
+	public enum CubeMapFace : sbyte
 	{
 		/// <summary>
 		/// Positive X face in the cube map.

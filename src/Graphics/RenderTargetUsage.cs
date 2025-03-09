@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines if the previous content in a render target is preserved when it set on the graphics device.
 	/// </summary>
-	public enum RenderTargetUsage
+	public enum RenderTargetUsage : sbyte
 	{
 		/// <summary>
 		/// The render target content will not be preserved.

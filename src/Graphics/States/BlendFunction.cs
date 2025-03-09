@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines a function for color blending.
 	/// </summary>
-	public enum BlendFunction
+	public enum BlendFunction : sbyte
 	{
 		/// <summary>
 		/// The function will add destination to the source. (srcColor * srcBlend) + (destColor * destBlend)

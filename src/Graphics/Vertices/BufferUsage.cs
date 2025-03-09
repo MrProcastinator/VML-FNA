@@ -11,8 +11,8 @@ namespace Microsoft.Xna.Framework.Graphics
 {
 	/// <summary>
 	/// A usage hint for optimizing memory placement of graphics buffers.
-	/// </summary>
-	public enum BufferUsage
+	/// </summary>	
+	public enum BufferUsage : sbyte
 	{
 		/// <summary>
 		/// No special usage.

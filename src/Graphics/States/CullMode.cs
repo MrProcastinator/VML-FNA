@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines a culling mode for faces in rasterization process.
 	/// </summary>
-	public enum CullMode
+	public enum CullMode : sbyte
 	{
 		/// <summary>
 		/// Do not cull faces.

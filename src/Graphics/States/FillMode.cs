@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines options for filling the primitive.
 	/// </summary>
-	public enum FillMode
+	public enum FillMode : sbyte
 	{
 		/// <summary>
 		/// Draw solid faces for each primitive.

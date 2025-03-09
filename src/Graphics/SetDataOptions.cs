@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines how vertex or index buffer data will be flushed during a SetData operation.
 	/// </summary>
-	public enum SetDataOptions
+	public enum SetDataOptions : sbyte
 	{
 		/// <summary>
 		/// The SetData can overwrite the portions of existing data.

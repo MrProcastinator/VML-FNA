@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines vertex element formats.
 	/// </summary>
-	public enum VertexElementFormat
+	public enum VertexElementFormat : sbyte
 	{
 		/// <summary>
 		/// Single 32-bit floating point number.

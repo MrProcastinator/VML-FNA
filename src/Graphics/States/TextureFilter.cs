@@ -12,7 +12,7 @@ namespace Microsoft.Xna.Framework.Graphics
 	/// <summary>
 	/// Defines filtering types for texture sampler.
 	/// </summary>
-	public enum TextureFilter
+	public enum TextureFilter : sbyte
 	{
 		/// <summary>
 		/// Use linear filtering.
