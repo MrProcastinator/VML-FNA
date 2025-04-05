@@ -68,10 +68,12 @@ namespace Microsoft.Xna.Framework
 				MediaStateChanged = false;
 			}
 #endif
+#if ENABLE_TOUCH
 			if (TouchPanel.TouchDeviceExists)
 			{
 				TouchPanel.Update();
 			}
+#endif
 		}
 		#endregion
 	}
