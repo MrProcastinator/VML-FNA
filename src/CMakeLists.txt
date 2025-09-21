@@ -313,8 +313,6 @@ set(FNA_BASE_SOURCES
 	"Vector2.cs"
 	"Vector3.cs"
 	"Vector4.cs"
-# Debug only
-	"Utilities/DebugUtils.cs"
 )
 
 set(FNA_MEDIA_SHARED_SOURCES
@@ -337,7 +335,7 @@ set(FNA_SONG_SOURCES
 	"Media/VisualizationData.cs"
 )
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   set(MONO_RELEASE_TYPE debug)
   set(FNA_DEFINES DEBUG)
 else()
