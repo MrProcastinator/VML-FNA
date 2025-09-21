@@ -278,12 +278,13 @@ namespace Microsoft.Xna.Framework
 
 		#region Private Static Variables
 
-		private static Matrix identity = new Matrix(
-			1f, 0f, 0f, 0f,
-			0f, 1f, 0f, 0f,
-			0f, 0f, 1f, 0f,
-			0f, 0f, 0f, 1f
-		);
+		private static Matrix identity = new Matrix()
+		{
+			M11 = 1f, M12 = 0f, M13 = 0f, M14 = 0f,
+			M21 = 0f, M22 = 1f, M23 = 0f, M24 = 0f,
+			M31 = 0f, M32 = 0f, M33 = 1f, M34 = 0f,
+			M41 = 0f, M42 = 0f, M43 = 0f, M44 = 1f
+		};
 
 		#endregion
 

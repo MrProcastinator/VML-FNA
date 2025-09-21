@@ -16,6 +16,57 @@ using System.Text;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
+#region Request Structs
+	/* These structs were made as a workaround to a bug found on Mono
+	 * 32-bit AOT compiler for PSVita, where passing more than 5
+	 * parameters in a function causes stack corruption for the sixth
+	 * parameter. This struct is exactly the same as the arguments
+	 * needed to pass for a call to the following methods:
+	 *     - PushSprite
+	 *     - GenerateVertexInfo
+	 * -MrProcastinator
+	 */
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct PushSpriteRequest
+	{
+		public Texture2D texture;
+		public float sourceX;
+		public float sourceY;
+		public float sourceW;
+		public float sourceH;
+		public float destinationX;
+		public float destinationY;
+		public float destinationW;
+		public float destinationH;
+		public Color color;
+		public float originX;
+		public float originY;
+		public float rotationSin;
+		public float rotationCos;
+		public float depth;
+		public byte effects;
+	}
+
+    internal struct GenerateVertexInfoRequest
+    {
+        public float sourceX;
+        public float sourceY;
+        public float sourceW;
+        public float sourceH;
+        public float destinationX;
+        public float destinationY;
+        public float destinationW;
+        public float destinationH;
+        public Color color;
+        public float originX;
+        public float originY;
+        public float rotationSin;
+        public float rotationCos;
+        public float depth;
+        public byte effects;
+    }
+#endregion
+
 	/* MSDN Docs:
 	 * http://msdn.microsoft.com/en-us/library/microsoft.xna.framework.graphics.spritebatch.aspx
 	 * Other References:
@@ -194,9 +245,9 @@ namespace Microsoft.Xna.Framework.Graphics
 		{
 			if (!IsDisposed)
 			{
-				if(spriteEffect != null) spriteEffect.Dispose();
-				if(indexBuffer != null) indexBuffer.Dispose();
-				if(vertexBuffer != null) vertexBuffer.Dispose();
+				if (spriteEffect != null) spriteEffect.Dispose();
+				if (indexBuffer != null) indexBuffer.Dispose();
+				if (vertexBuffer != null) vertexBuffer.Dispose();
 			}
 			base.Dispose(disposing);
 		}
@@ -339,24 +390,25 @@ namespace Microsoft.Xna.Framework.Graphics
 			Color color
 		) {
 			CheckBegin("Draw");
-			PushSprite(
-				texture,
-				0.0f,
-				0.0f,
-				1.0f,
-				1.0f,
-				position.X,
-				position.Y,
-				texture.Width,
-				texture.Height,
-				color,
-				0.0f,
-				0.0f,
-				0.0f,
-				1.0f,
-				0.0f,
-				0
-			);
+			PushSprite(new PushSpriteRequest()
+			{
+				texture = texture,
+				sourceX = 0.0f,
+				sourceY = 0.0f,
+				sourceW = 1.0f,
+				sourceH = 1.0f,
+				destinationX = position.X,
+				destinationY = position.Y,
+				destinationW = texture.Width,
+				destinationH = texture.Height,
+				color = color,
+				originX = 0.0f,
+				originY = 0.0f,
+				rotationSin = 0.0f,
+				rotationCos = 1.0f,
+				depth = 0.0f,
+				effects = 0
+			});
 		}
 
 		public void Draw(
@@ -386,24 +438,25 @@ namespace Microsoft.Xna.Framework.Graphics
 				destH = texture.Height;
 			}
 			CheckBegin("Draw");
-			PushSprite(
-				texture,
-				sourceX,
-				sourceY,
-				sourceW,
-				sourceH,
-				position.X,
-				position.Y,
-				destW,
-				destH,
-				color,
-				0.0f,
-				0.0f,
-				0.0f,
-				1.0f,
-				0.0f,
-				0
-			);
+			PushSprite(new PushSpriteRequest()
+			{
+				texture = texture,
+				sourceX = sourceX,
+				sourceY = sourceY,
+				sourceW = sourceW,
+				sourceH = sourceH,
+				destinationX = position.X,
+				destinationY = position.Y,
+				destinationW = destW,
+				destinationH = destH,
+				color = color,
+				originX = 0.0f,
+				originY = 0.0f,
+				rotationSin = 0.0f,
+				rotationCos = 1.0f,
+				depth = 0.0f,
+				effects = 0
+			});
 		}
 
 		public void Draw(
@@ -445,24 +498,25 @@ namespace Microsoft.Xna.Framework.Graphics
 				destW *= texture.Width;
 				destH *= texture.Height;
 			}
-			PushSprite(
-				texture,
-				sourceX,
-				sourceY,
-				sourceW,
-				sourceH,
-				position.X,
-				position.Y,
-				destW,
-				destH,
-				color,
-				origin.X / sourceW / (float) texture.Width,
-				origin.Y / sourceH / (float) texture.Height,
-				(float) Math.Sin(rotation),
-				(float) Math.Cos(rotation),
-				layerDepth,
-				(byte) (effects & (SpriteEffects) 0x03)
-			);
+			PushSprite(new PushSpriteRequest()
+			{
+				texture = texture,
+				sourceX = sourceX,
+				sourceY = sourceY,
+				sourceW = sourceW,
+				sourceH = sourceH,
+				destinationX = position.X,
+				destinationY = position.Y,
+				destinationW = destW,
+				destinationH = destH,
+				color = color,
+				originX = origin.X / sourceW / (float) texture.Width,
+				originY = origin.Y / sourceH / (float) texture.Height,
+				rotationSin = (float) Math.Sin(rotation),
+				rotationCos = (float) Math.Cos(rotation),
+				depth = layerDepth,
+				effects = (byte)(effects & (SpriteEffects) 0x03)
+			});
 		}
 
 		public void Draw(
@@ -502,24 +556,25 @@ namespace Microsoft.Xna.Framework.Graphics
 				scale.X *= texture.Width;
 				scale.Y *= texture.Height;
 			}
-			PushSprite(
-				texture,
-				sourceX,
-				sourceY,
-				sourceW,
-				sourceH,
-				position.X,
-				position.Y,
-				scale.X,
-				scale.Y,
-				color,
-				origin.X / sourceW / (float) texture.Width,
-				origin.Y / sourceH / (float) texture.Height,
-				(float) Math.Sin(rotation),
-				(float) Math.Cos(rotation),
-				layerDepth,
-				(byte) (effects & (SpriteEffects) 0x03)
-			);
+			PushSprite(new PushSpriteRequest()
+			{
+				texture = texture,
+				sourceX = sourceX,
+				sourceY = sourceY,
+				sourceW = sourceW,
+				sourceH = sourceH,
+				destinationX = position.X,
+				destinationY = position.Y,
+				destinationW = scale.X,
+				destinationH = scale.Y,
+				color = color,
+				originX = origin.X / sourceW / (float) texture.Width,
+				originY = origin.Y / sourceH / (float) texture.Height,
+				rotationSin = (float) Math.Sin(rotation),
+				rotationCos = (float) Math.Cos(rotation),
+				depth = layerDepth,
+				effects = (byte)(effects & (SpriteEffects) 0x03)
+			});
 		}
 
 		public void Draw(
@@ -528,24 +583,25 @@ namespace Microsoft.Xna.Framework.Graphics
 			Color color
 		) {
 			CheckBegin("Draw");
-			PushSprite(
-				texture,
-				0.0f,
-				0.0f,
-				1.0f,
-				1.0f,
-				destinationRectangle.X,
-				destinationRectangle.Y,
-				destinationRectangle.Width,
-				destinationRectangle.Height,
-				color,
-				0.0f,
-				0.0f,
-				0.0f,
-				1.0f,
-				0.0f,
-				0
-			);
+			PushSprite(new PushSpriteRequest()
+			{
+				texture = texture,
+				sourceX = 0.0f,
+				sourceY = 0.0f,
+				sourceW = 1.0f,
+				sourceH = 1.0f,
+				destinationX = destinationRectangle.X,
+				destinationY = destinationRectangle.Y,
+				destinationW = destinationRectangle.Width,
+				destinationH = destinationRectangle.Height,
+				color = color,
+				originX = 0.0f,
+				originY = 0.0f,
+				rotationSin = 0.0f,
+				rotationCos = 1.0f,
+				depth = 0.0f,
+				effects = 0
+			});
 		}
 
 		public void Draw(
@@ -570,24 +626,25 @@ namespace Microsoft.Xna.Framework.Graphics
 				sourceW = 1.0f;
 				sourceH = 1.0f;
 			}
-			PushSprite(
-				texture,
-				sourceX,
-				sourceY,
-				sourceW,
-				sourceH,
-				destinationRectangle.X,
-				destinationRectangle.Y,
-				destinationRectangle.Width,
-				destinationRectangle.Height,
-				color,
-				0.0f,
-				0.0f,
-				0.0f,
-				1.0f,
-				0.0f,
-				0
-			);
+			PushSprite(new PushSpriteRequest()
+			{
+				texture = texture,
+				sourceX = sourceX,
+				sourceY = sourceY,
+				sourceW = sourceW,
+				sourceH = sourceH,
+				destinationX = destinationRectangle.X,
+				destinationY = destinationRectangle.Y,
+				destinationW = destinationRectangle.Width,
+				destinationH = destinationRectangle.Height,
+				color = color,
+				originX = 0.0f,
+				originY = 0.0f,
+				rotationSin = 0.0f,
+				rotationCos = 1.0f,
+				depth = 0.0f,
+				effects = 0
+			});
 		}
 
 		public void Draw(
@@ -622,24 +679,25 @@ namespace Microsoft.Xna.Framework.Graphics
 				sourceW = 1.0f;
 				sourceH = 1.0f;
 			}
-			PushSprite(
-				texture,
-				sourceX,
-				sourceY,
-				sourceW,
-				sourceH,
-				destinationRectangle.X,
-				destinationRectangle.Y,
-				destinationRectangle.Width,
-				destinationRectangle.Height,
-				color,
-				origin.X / sourceW / (float) texture.Width,
-				origin.Y / sourceH / (float) texture.Height,
-				(float) Math.Sin(rotation),
-				(float) Math.Cos(rotation),
-				layerDepth,
-				(byte) (effects & (SpriteEffects) 0x03)
-			);
+			PushSprite(new PushSpriteRequest()
+			{
+				texture = texture,
+				sourceX = sourceX,
+				sourceY = sourceY,
+				sourceW = sourceW,
+				sourceH = sourceH,
+				destinationX = destinationRectangle.X,
+				destinationY = destinationRectangle.Y,
+				destinationW = destinationRectangle.Width,
+				destinationH = destinationRectangle.Height,
+				color = color,
+				originX = origin.X / sourceW / (float) texture.Width,
+				originY = origin.Y / sourceH / (float) texture.Height,
+				rotationSin = (float) Math.Sin(rotation),
+				rotationCos = (float) Math.Cos(rotation),
+				depth = layerDepth,
+				effects = (byte)(effects & (SpriteEffects) 0x03)
+			});
 		}
 
 		#endregion
@@ -827,24 +885,25 @@ namespace Microsoft.Xna.Framework.Graphics
 					Math.Abs(cGlyph.Height),
 					MathHelper.MachineEpsilonFloat
 				) / (float) textureValue.Height;
-				PushSprite(
-					textureValue,
-					cGlyph.X / (float) textureValue.Width,
-					cGlyph.Y / (float) textureValue.Height,
-					sourceW,
-					sourceH,
-					position.X,
-					position.Y,
-					cGlyph.Width * scale.X,
-					cGlyph.Height * scale.Y,
-					color,
-					offsetX / sourceW / (float) textureValue.Width,
-					offsetY / sourceH / (float) textureValue.Height,
-					(float) Math.Sin(rotation),
-					(float) Math.Cos(rotation),
-					layerDepth,
-					(byte) effects
-				);
+				PushSprite(new PushSpriteRequest()
+				{
+					texture = textureValue,
+					sourceX = cGlyph.X / (float) textureValue.Width,
+					sourceY = cGlyph.Y / (float) textureValue.Height,
+					sourceW = sourceW,
+					sourceH = sourceH,
+					destinationX = position.X,
+					destinationY = position.Y,
+					destinationW = cGlyph.Width * scale.X,
+					destinationH = cGlyph.Height * scale.Y,
+					color = color,
+					originX = offsetX / sourceW / (float) textureValue.Width,
+					originY = offsetY / sourceH / (float) textureValue.Height,
+					rotationSin = (float) Math.Sin(rotation),
+					rotationCos = (float) Math.Cos(rotation),
+					depth = layerDepth,
+					effects = (byte) effects
+				});
 
 				/* Add the character width and right-side
 				 * bearing to the line width.
@@ -1023,24 +1082,25 @@ namespace Microsoft.Xna.Framework.Graphics
 					Math.Abs(cGlyph.Height),
 					MathHelper.MachineEpsilonFloat
 				) / (float) textureValue.Height;
-				PushSprite(
-					textureValue,
-					cGlyph.X / (float) textureValue.Width,
-					cGlyph.Y / (float) textureValue.Height,
-					sourceW,
-					sourceH,
-					position.X,
-					position.Y,
-					cGlyph.Width * scale.X,
-					cGlyph.Height * scale.Y,
-					color,
-					offsetX / sourceW / (float) textureValue.Width,
-					offsetY / sourceH / (float) textureValue.Height,
-					(float) Math.Sin(rotation),
-					(float) Math.Cos(rotation),
-					layerDepth,
-					(byte) effects
-				);
+				PushSprite(new PushSpriteRequest()
+				{
+					texture = textureValue,
+					sourceX = cGlyph.X / (float) textureValue.Width,
+					sourceY = cGlyph.Y / (float) textureValue.Height,
+					sourceW = sourceW,
+					sourceH = sourceH,
+					destinationX = position.X,
+					destinationY = position.Y,
+					destinationW = cGlyph.Width * scale.X,
+					destinationH = cGlyph.Height * scale.Y,
+					color = color,
+					originX = offsetX / sourceW / (float) textureValue.Width,
+					originY = offsetY / sourceH / (float) textureValue.Height,
+					rotationSin = (float) Math.Sin(rotation),
+					rotationCos = (float) Math.Cos(rotation),
+					depth = layerDepth,
+					effects = (byte) effects
+				});
 
 				/* Add the character width and right-side
 				 * bearing to the line width.
@@ -1053,24 +1113,8 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Private Methods
 
-		private unsafe void PushSprite(
-			Texture2D texture,
-			float sourceX,
-			float sourceY,
-			float sourceW,
-			float sourceH,
-			float destinationX,
-			float destinationY,
-			float destinationW,
-			float destinationH,
-			Color color,
-			float originX,
-			float originY,
-			float rotationSin,
-			float rotationCos,
-			float depth,
-			byte effects
-		) {
+		private unsafe void PushSprite(PushSpriteRequest request)
+		{
 			if (numSprites >= vertexInfo.Length)
 			{
 				if (vertexInfo.Length >= MAX_ARRAYSIZE)
@@ -1105,21 +1149,24 @@ namespace Microsoft.Xna.Framework.Graphics
 					VertexPositionColorTexture4* sprite = (VertexPositionColorTexture4*) Marshal.UnsafeAddrOfPinnedArrayElement(vertexInfo, 0);
 					GenerateVertexInfo(
 						sprite,
-						sourceX,
-						sourceY,
-						sourceW,
-						sourceH,
-						destinationX,
-						destinationY,
-						destinationW,
-						destinationH,
-						color,
-						originX,
-						originY,
-						rotationSin,
-						rotationCos,
-						depth,
-						effects
+						new GenerateVertexInfoRequest
+						{
+							sourceX = request.sourceX,
+							sourceY = request.sourceY,
+							sourceW = request.sourceW,
+							sourceH = request.sourceH,
+							destinationX = request.destinationX,
+							destinationY = request.destinationY,
+							destinationW = request.destinationW,
+							destinationH = request.destinationH,
+							color = request.color,
+							originX = request.originX,
+							originY = request.originY,
+							rotationSin = request.rotationSin,
+							rotationCos = request.rotationCos,
+							depth = request.depth,
+							effects = request.effects
+						}
 					);
 
 					if (supportsNoOverwrite)
@@ -1145,7 +1192,7 @@ namespace Microsoft.Xna.Framework.Graphics
 						);
 					}
 				}
-				DrawPrimitives(texture, offset, 1);
+				DrawPrimitives(request.texture, offset, 1);
 			}
 			else if (sortMode == SpriteSortMode.Deferred)
 			{
@@ -1153,50 +1200,53 @@ namespace Microsoft.Xna.Framework.Graphics
 					VertexPositionColorTexture4* sprite = (VertexPositionColorTexture4*) Marshal.UnsafeAddrOfPinnedArrayElement(vertexInfo, numSprites);
 					GenerateVertexInfo(
 						sprite,
-						sourceX,
-						sourceY,
-						sourceW,
-						sourceH,
-						destinationX,
-						destinationY,
-						destinationW,
-						destinationH,
-						color,
-						originX,
-						originY,
-						rotationSin,
-						rotationCos,
-						depth,
-						effects
+						new GenerateVertexInfoRequest
+						{
+							sourceX = request.sourceX,
+							sourceY = request.sourceY,
+							sourceW = request.sourceW,
+							sourceH = request.sourceH,
+							destinationX = request.destinationX,
+							destinationY = request.destinationY,
+							destinationW = request.destinationW,
+							destinationH = request.destinationH,
+							color = request.color,
+							originX = request.originX,
+							originY = request.originY,
+							rotationSin = request.rotationSin,
+							rotationCos = request.rotationCos,
+							depth = request.depth,
+							effects = request.effects
+						}
 					);
 				}
 
-				textureInfo[numSprites] = texture;
+				textureInfo[numSprites] = request.texture;
 				numSprites += 1;
 			}
 			else
 			{
 				{
 					SpriteInfo* spriteInfo = (SpriteInfo*) Marshal.UnsafeAddrOfPinnedArrayElement(spriteInfos, numSprites);
-					spriteInfo->textureHash = texture.GetHashCode();
-					spriteInfo->sourceX = sourceX;
-					spriteInfo->sourceY = sourceY;
-					spriteInfo->sourceW = sourceW;
-					spriteInfo->sourceH = sourceH;
-					spriteInfo->destinationX = destinationX;
-					spriteInfo->destinationY = destinationY;
-					spriteInfo->destinationW = destinationW;
-					spriteInfo->destinationH = destinationH;
-					spriteInfo->color = color;
-					spriteInfo->originX = originX;
-					spriteInfo->originY = originY;
-					spriteInfo->rotationSin = rotationSin;
-					spriteInfo->rotationCos = rotationCos;
-					spriteInfo->depth = depth;
-					spriteInfo->effects = effects;
+					spriteInfo->textureHash = request.texture.GetHashCode();
+					spriteInfo->sourceX = request.sourceX;
+					spriteInfo->sourceY = request.sourceY;
+					spriteInfo->sourceW = request.sourceW;
+					spriteInfo->sourceH = request.sourceH;
+					spriteInfo->destinationX = request.destinationX;
+					spriteInfo->destinationY = request.destinationY;
+					spriteInfo->destinationW = request.destinationW;
+					spriteInfo->destinationH = request.destinationH;
+					spriteInfo->color = request.color;
+					spriteInfo->originX = request.originX;
+					spriteInfo->originY = request.originY;
+					spriteInfo->rotationSin = request.rotationSin;
+					spriteInfo->rotationCos = request.rotationCos;
+					spriteInfo->depth = request.depth;
+					spriteInfo->effects = request.effects;
 				}
 
-				textureInfo[numSprites] = texture;
+				textureInfo[numSprites] = request.texture;
 				numSprites += 1;
 			}
 		}
@@ -1246,21 +1296,24 @@ namespace Microsoft.Xna.Framework.Graphics
 						SpriteInfo* info = (SpriteInfo*) sortedSpriteInfo[i];
 						GenerateVertexInfo(
 							&sprites[i],
-							info->sourceX,
-							info->sourceY,
-							info->sourceW,
-							info->sourceH,
-							info->destinationX,
-							info->destinationY,
-							info->destinationW,
-							info->destinationH,
-							info->color,
-							info->originX,
-							info->originY,
-							info->rotationSin,
-							info->rotationCos,
-							info->depth,
-							info->effects
+							new GenerateVertexInfoRequest
+							{
+								sourceX = info->sourceX,
+								sourceY = info->sourceY,
+								sourceW = info->sourceW,
+								sourceH = info->sourceH,
+								destinationX = info->destinationX,
+								destinationY = info->destinationY,
+								destinationW = info->destinationW,
+								destinationH = info->destinationH,
+								color = info->color,
+								originX = info->originX,
+								originY = info->originY,
+								rotationSin = info->rotationSin,
+								rotationCos = info->rotationCos,
+								depth = info->depth,
+								effects = info->effects
+							}
 						);
 					}
 				}
@@ -1334,90 +1387,76 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		private static unsafe void GenerateVertexInfo(
 			VertexPositionColorTexture4* sprite,
-			float sourceX,
-			float sourceY,
-			float sourceW,
-			float sourceH,
-			float destinationX,
-			float destinationY,
-			float destinationW,
-			float destinationH,
-			Color color,
-			float originX,
-			float originY,
-			float rotationSin,
-			float rotationCos,
-			float depth,
-			byte effects
+			GenerateVertexInfoRequest request
 		) {
-			float cornerX = -originX * destinationW;
-			float cornerY = -originY * destinationH;
+			float cornerX = -request.originX * request.destinationW;
+			float cornerY = -request.originY * request.destinationH;
 			sprite->Position0.X = (
-				(-rotationSin * cornerY) +
-				(rotationCos * cornerX) +
-				destinationX
+				(-request.rotationSin * cornerY) +
+				(request.rotationCos * cornerX) +
+				request.destinationX
 			);
 			sprite->Position0.Y = (
-				(rotationCos * cornerY) +
-				(rotationSin * cornerX) +
-				destinationY
+				(request.rotationCos * cornerY) +
+				(request.rotationSin * cornerX) +
+				request.destinationY
 			);
-			cornerX = (1.0f - originX) * destinationW;
-			cornerY = -originY * destinationH;
+			cornerX = (1.0f - request.originX) * request.destinationW;
+			cornerY = -request.originY * request.destinationH;
 			sprite->Position1.X = (
-				(-rotationSin * cornerY) +
-				(rotationCos * cornerX) +
-				destinationX
+				(-request.rotationSin * cornerY) +
+				(request.rotationCos * cornerX) +
+				request.destinationX
 			);
 			sprite->Position1.Y = (
-				(rotationCos * cornerY) +
-				(rotationSin * cornerX) +
-				destinationY
+				(request.rotationCos * cornerY) +
+				(request.rotationSin * cornerX) +
+				request.destinationY
 			);
-			cornerX = -originX * destinationW;
-			cornerY = (1.0f - originY) * destinationH;
+			cornerX = -request.originX * request.destinationW;
+			cornerY = (1.0f - request.originY) * request.destinationH;
 			sprite->Position2.X = (
-				(-rotationSin * cornerY) +
-				(rotationCos * cornerX) +
-				destinationX
+				(-request.rotationSin * cornerY) +
+				(request.rotationCos * cornerX) +
+				request.destinationX
 			);
 			sprite->Position2.Y = (
-				(rotationCos * cornerY) +
-				(rotationSin * cornerX) +
-				destinationY
+				(request.rotationCos * cornerY) +
+				(request.rotationSin * cornerX) +
+				request.destinationY
 			);
-			cornerX = (1.0f - originX) * destinationW;
-			cornerY = (1.0f - originY) * destinationH;
+			cornerX = (1.0f - request.originX) * request.destinationW;
+			cornerY = (1.0f - request.originY) * request.destinationH;
 			sprite->Position3.X = (
-				(-rotationSin * cornerY) +
-				(rotationCos * cornerX) +
-				destinationX
+				(-request.rotationSin * cornerY) +
+				(request.rotationCos * cornerX) +
+				request.destinationX
 			);
 			sprite->Position3.Y = (
-				(rotationCos * cornerY) +
-				(rotationSin * cornerX) +
-				destinationY
+				(request.rotationCos * cornerY) +
+				(request.rotationSin * cornerX) +
+				request.destinationY
 			);
 			{
 				float* flipX = (float*) Marshal.UnsafeAddrOfPinnedArrayElement(CornerOffsetX, 0);
 				float* flipY = (float*) Marshal.UnsafeAddrOfPinnedArrayElement(CornerOffsetY, 0);
-				sprite->TextureCoordinate0.X = (flipX[0 ^ effects] * sourceW) + sourceX;
-				sprite->TextureCoordinate0.Y = (flipY[0 ^ effects] * sourceH) + sourceY;
-				sprite->TextureCoordinate1.X = (flipX[1 ^ effects] * sourceW) + sourceX;
-				sprite->TextureCoordinate1.Y = (flipY[1 ^ effects] * sourceH) + sourceY;
-				sprite->TextureCoordinate2.X = (flipX[2 ^ effects] * sourceW) + sourceX;
-				sprite->TextureCoordinate2.Y = (flipY[2 ^ effects] * sourceH) + sourceY;
-				sprite->TextureCoordinate3.X = (flipX[3 ^ effects] * sourceW) + sourceX;
-				sprite->TextureCoordinate3.Y = (flipY[3 ^ effects] * sourceH) + sourceY;
+				sprite->TextureCoordinate0.X = (flipX[0 ^ request.effects] * request.sourceW) + request.sourceX;
+				sprite->TextureCoordinate0.Y = (flipY[0 ^ request.effects] * request.sourceH) + request.sourceY;
+				sprite->TextureCoordinate1.X = (flipX[1 ^ request.effects] * request.sourceW) + request.sourceX;
+				sprite->TextureCoordinate1.Y = (flipY[1 ^ request.effects] * request.sourceH) + request.sourceY;
+				sprite->TextureCoordinate2.X = (flipX[2 ^ request.effects] * request.sourceW) + request.sourceX;
+				sprite->TextureCoordinate2.Y = (flipY[2 ^ request.effects] * request.sourceH) + request.sourceY;
+				sprite->TextureCoordinate3.X = (flipX[3 ^ request.effects] * request.sourceW) + request.sourceX;
+				sprite->TextureCoordinate3.Y = (flipY[3 ^ request.effects] * request.sourceH) + request.sourceY;
 			}
-			sprite->Position0.Z = depth;
-			sprite->Position1.Z = depth;
-			sprite->Position2.Z = depth;
-			sprite->Position3.Z = depth;
-			sprite->Color0 = color;
-			sprite->Color1 = color;
-			sprite->Color2 = color;
-			sprite->Color3 = color;
+			sprite->Position0.Z = request.depth;
+			sprite->Position1.Z = request.depth;
+			sprite->Position2.Z = request.depth;
+			sprite->Position3.Z = request.depth;
+			sprite->Color0 = request.color;
+			sprite->Color1 = request.color;
+			sprite->Color2 = request.color;
+			sprite->Color3 = request.color;
 		}
 
 		private void PrepRenderState()
