@@ -223,6 +223,7 @@ namespace Microsoft.Xna.Framework
 			// This _should_ be the first real SDL call we make...
 			if (SDL.SDL_Init(
 				SDL.SDL_INIT_VIDEO |
+				SDL.SDL_INIT_JOYSTICK |
 				SDL.SDL_INIT_GAMECONTROLLER
 			) != 0)
 			{
