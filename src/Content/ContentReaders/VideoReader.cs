@@ -56,11 +56,14 @@ namespace Microsoft.Xna.Framework.Content
 			return new Video(
 				path,
 				input.ContentManager.GetGraphicsDevice(),
-				durationMS,
-				width,
-				height,
-				framesPerSecond,
-				soundTrackType
+				new VideoProperties
+				(
+					durationMS,
+					width,
+					height,
+					framesPerSecond,
+					soundTrackType
+				)
 			);
 		}
 

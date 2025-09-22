@@ -309,6 +309,7 @@ namespace Microsoft.Xna.Framework
 		/// <param name="m42">A fourth row and second column value.</param>
 		/// <param name="m43">A fourth row and third column value.</param>
 		/// <param name="m44">A fourth row and fourth column value.</param>
+		[Obsolete("This constructor corrupts the value of m22 when called, it should not be used.", true)]
 		public Matrix(
 			float m11, float m12, float m13, float m14,
 			float m21, float m22, float m23, float m24,
@@ -369,12 +370,13 @@ namespace Microsoft.Xna.Framework
 				return false;
 			}
 
-			Matrix m1 = new Matrix(
-				M11 / scale.X, M12 / scale.X, M13 / scale.X, 0,
-				M21 / scale.Y, M22 / scale.Y, M23 / scale.Y, 0,
-				M31 / scale.Z, M32 / scale.Z, M33 / scale.Z, 0,
-				0, 0, 0, 1
-			);
+			Matrix m1 = new Matrix()
+			{
+				M11 = M11 / scale.X, M12 = M12 / scale.X, M13 = M13 / scale.X, M14 = 0,
+				M21 = M21 / scale.Y, M22 = M22 / scale.Y, M23 = M23 / scale.Y, M24 = 0,
+				M31 = M31 / scale.Z, M32 = M32 / scale.Z, M33 = M33 / scale.Z, M34 = 0,
+				M41 = 0, M42 = 0, M43 = 0, M44 = 1
+			};
 
 			rotation = Quaternion.CreateFromRotationMatrix(m1);
 			return true;
@@ -1021,6 +1023,7 @@ namespace Microsoft.Xna.Framework
 		/// <param name="zNearPlane">Depth of the near plane.</param>
 		/// <param name="zFarPlane">Depth of the far plane.</param>
 		/// <returns>The new projection <see cref="Matrix"/> for customized orthographic view.</returns>
+		[Obsolete("This method corrupts the value of zFarPlane when called, it should not be used.", true)]
 		public static Matrix CreateOrthographicOffCenter(
 			float left,
 			float right,
@@ -1029,12 +1032,30 @@ namespace Microsoft.Xna.Framework
 			float zNearPlane,
 			float zFarPlane
 		) {
+			throw new NotSupportedException("This method corrupts the value of zFarPlane when called, it should not be used.");
+		}
+
+		/// <summary>
+		/// Creates a new projection <see cref="Matrix"/> for customized orthographic view.
+		/// </summary>
+		/// <param name="nearPlane">Rectangle coordinates of the near plane.</param>
+		/// <param name="zNearPlane">Depth of the near plane.</param>
+		/// <param name="zFarPlane">Depth of the far plane.</param>
+		/// <returns>The new projection <see cref="Matrix"/> for customized orthographic view.</returns>
+		public static Matrix CreateOrthographicOffCenter(
+			Rectangle nearPlane,
+			float zNearPlane,
+			float zFarPlane
+		) {
 			Matrix matrix;
 			CreateOrthographicOffCenter(
-				left,
-				right,
-				bottom,
-				top,
+				new Rectangle
+				(
+					nearPlane.Left,
+					nearPlane.Top,
+					nearPlane.Width,
+					nearPlane.Height
+				),
 				zNearPlane,
 				zFarPlane,
 				out matrix
@@ -1052,6 +1073,7 @@ namespace Microsoft.Xna.Framework
 		/// <param name="zNearPlane">Depth of the near plane.</param>
 		/// <param name="zFarPlane">Depth of the far plane.</param>
 		/// <param name="result">The new projection <see cref="Matrix"/> for customized orthographic view as an output parameter.</param>
+		[Obsolete("This method corrupts the value of zFarPlane when called, it should not be used.", true)]
 		public static void CreateOrthographicOffCenter(
 			float left,
 			float right,
@@ -1061,12 +1083,28 @@ namespace Microsoft.Xna.Framework
 			float zFarPlane,
 			out Matrix result
 		) {
-			result.M11 = (float) (2.0 / ((double) right - (double) left));
+			throw new NotSupportedException("This method corrupts the value of zFarPlane when called, it should not be used.");
+		}
+
+		/// <summary>
+		/// Creates a new projection <see cref="Matrix"/> for customized orthographic view.
+		/// </summary>
+		/// <param name="nearPlane">Rectangle coordinates of the near plane.</param>
+		/// <param name="zNearPlane">Depth of the near plane.</param>
+		/// <param name="zFarPlane">Depth of the far plane.</param>
+		/// <param name="result">The new projection <see cref="Matrix"/> for customized orthographic view as an output parameter.</param>
+		public static void CreateOrthographicOffCenter(
+			Rectangle nearPlane,
+			float zNearPlane,
+			float zFarPlane,
+			out Matrix result
+		) {
+			result.M11 = (float) (2.0 / ((double) nearPlane.Right - (double) nearPlane.Left));
 			result.M12 = 0.0f;
 			result.M13 = 0.0f;
 			result.M14 = 0.0f;
 			result.M21 = 0.0f;
-			result.M22 = (float) (2.0 / ((double) top - (double) bottom));
+			result.M22 = (float) (2.0 / ((double) nearPlane.Top - (double) nearPlane.Bottom));
 			result.M23 = 0.0f;
 			result.M24 = 0.0f;
 			result.M31 = 0.0f;
@@ -1074,12 +1112,12 @@ namespace Microsoft.Xna.Framework
 			result.M33 = (float) (1.0 / ((double) zNearPlane - (double) zFarPlane));
 			result.M34 = 0.0f;
 			result.M41 = (float) (
-				((double) left + (double) right) /
-				((double) left - (double) right)
+				((double) nearPlane.Left + (double) nearPlane.Right) /
+				((double) nearPlane.Left - (double) nearPlane.Right)
 			);
 			result.M42 = (float) (
-				((double) top + (double) bottom) /
-				((double) bottom - (double) top)
+				((double) nearPlane.Top + (double) nearPlane.Bottom) /
+				((double) nearPlane.Bottom - (double) nearPlane.Top)
 			);
 			result.M43 = (float) (
 				(double) zNearPlane /
@@ -1230,6 +1268,7 @@ namespace Microsoft.Xna.Framework
 		/// <param name="nearPlaneDistance">Distance to the near plane.</param>
 		/// <param name="farPlaneDistance">Distance to the far plane.</param>
 		/// <returns>The new <see cref="Matrix"/> for customized perspective view.</returns>
+		[Obsolete("This method corrupts the value of farPlaneDistance when called, it should not be used.", true)]
 		public static Matrix CreatePerspectiveOffCenter(
 			float left,
 			float right,
@@ -1261,6 +1300,7 @@ namespace Microsoft.Xna.Framework
 		/// <param name="nearPlaneDistance">Distance to the near plane.</param>
 		/// <param name="farPlaneDistance">Distance to the far plane.</param>
 		/// <param name="result">The new <see cref="Matrix"/> for customized perspective view as an output parameter.</param>
+		[Obsolete("This method corrupts the value of farPlaneDistance when called, it should not be used.", true)]
 		public static void CreatePerspectiveOffCenter(
 			float left,
 			float right,

@@ -7,8 +7,31 @@
  */
 #endregion
 
+using System.Runtime.InteropServices;
+
 namespace Microsoft.Xna.Framework.Input
 {
+	#region Request Structs
+	/* These structs were made as a workaround to a bug found on Mono
+	 * 32-bit AOT compiler for PSVita, where passing more than 5
+	 * parameters in a function causes stack corruption for the sixth
+	 * parameter. This struct is exactly the same as the arguments
+	 * needed to pass for a call to the following methods:
+	 *     - StickToButtons
+	 * -MrProcastinator
+	 */
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct StickToButtonsRequest
+	{
+		public Vector2 stick;
+		public Buttons left;
+		public Buttons right;
+		public Buttons up;
+		public Buttons down;
+		public float DeadZoneSize;
+	}
+
+	#endregion
 	/// <summary>
 	/// Represents specific information about the state of a controller,
 	/// including the current state of buttons and sticks.
@@ -99,22 +122,24 @@ namespace Microsoft.Xna.Framework.Input
 			{
 				buttons.buttons |= Input.Buttons.RightTrigger;
 			}
-			buttons.buttons |= StickToButtons(
-				thumbSticks.Left,
-				Input.Buttons.LeftThumbstickLeft,
-				Input.Buttons.LeftThumbstickRight,
-				Input.Buttons.LeftThumbstickUp,
-				Input.Buttons.LeftThumbstickDown,
-				GamePad.LeftDeadZone
-			);
-			buttons.buttons |= StickToButtons(
-				thumbSticks.Right,
-				Input.Buttons.RightThumbstickLeft,
-				Input.Buttons.RightThumbstickRight,
-				Input.Buttons.RightThumbstickUp,
-				Input.Buttons.RightThumbstickDown,
-				GamePad.RightDeadZone
-			);
+			buttons.buttons |= StickToButtons(new StickToButtonsRequest()
+			{
+				stick = thumbSticks.Left,
+				left = Input.Buttons.LeftThumbstickLeft,
+				right = Input.Buttons.LeftThumbstickRight,
+				up = Input.Buttons.LeftThumbstickUp,
+				down = Input.Buttons.LeftThumbstickDown,
+				DeadZoneSize = GamePad.LeftDeadZone
+			});
+			buttons.buttons |= StickToButtons(new StickToButtonsRequest()
+			{
+				stick = thumbSticks.Right,
+				left = Input.Buttons.RightThumbstickLeft,
+				right = Input.Buttons.RightThumbstickRight,
+				up = Input.Buttons.RightThumbstickUp,
+				down = Input.Buttons.RightThumbstickDown,
+				DeadZoneSize = GamePad.RightDeadZone
+			});
 
 			ThumbSticks = thumbSticks;
 			Triggers = triggers;
@@ -190,31 +215,25 @@ namespace Microsoft.Xna.Framework.Input
 
 		#region Private Static Methods
 
-		private static Buttons StickToButtons(
-			Vector2 stick,
-			Buttons left,
-			Buttons right,
-			Buttons up,
-			Buttons down,
-			float DeadZoneSize
-		) {
-			Buttons b = (Buttons) 0;
+		private static Buttons StickToButtons(StickToButtonsRequest request)
+		{
+			Buttons b = (Buttons)0;
 
-			if (stick.X > DeadZoneSize)
+			if (request.stick.X > request.DeadZoneSize)
 			{
-				b |= right;
+				b |= request.right;
 			}
-			if (stick.X < -DeadZoneSize)
+			if (request.stick.X < -request.DeadZoneSize)
 			{
-				b |= left;
+				b |= request.left;
 			}
-			if (stick.Y > DeadZoneSize)
+			if (request.stick.Y > request.DeadZoneSize)
 			{
-				b |= up;
+				b |= request.up;
 			}
-			if (stick.Y < -DeadZoneSize)
+			if (request.stick.Y < -request.DeadZoneSize)
 			{
-				b |= down;
+				b |= request.down;
 			}
 
 			return b;
@@ -231,12 +250,12 @@ namespace Microsoft.Xna.Framework.Input
 		/// <param name="right">Object on the right of the equal sign.</param>
 		public static bool operator ==(GamePadState left, GamePadState right)
 		{
-			return (	(left.IsConnected == right.IsConnected) &&
+			return ((left.IsConnected == right.IsConnected) &&
 					(left.PacketNumber == right.PacketNumber) &&
 					(left.Buttons == right.Buttons) &&
 					(left.DPad == right.DPad) &&
 					(left.ThumbSticks == right.ThumbSticks) &&
-					(left.Triggers == right.Triggers)	);
+					(left.Triggers == right.Triggers));
 		}
 
 		/// <summary>

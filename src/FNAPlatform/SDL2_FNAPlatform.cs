@@ -1043,10 +1043,13 @@ namespace Microsoft.Xna.Framework
 					TouchPanel.INTERNAL_onTouchEvent(
 						(int) evt.tfinger.fingerId,
 						TouchLocationState.Pressed,
-						evt.tfinger.x,
-						evt.tfinger.y,
-						0,
-						0
+						new TouchCoordinates()
+						{
+							x = evt.tfinger.x,
+							y = evt.tfinger.y,
+							dx = 0,
+							dy = 0
+						}
 					);
 				}
 				else if (evt.type == SDL.SDL_EventType.SDL_FINGERMOTION)
@@ -1054,10 +1057,13 @@ namespace Microsoft.Xna.Framework
 					TouchPanel.INTERNAL_onTouchEvent(
 						(int) evt.tfinger.fingerId,
 						TouchLocationState.Moved,
-						evt.tfinger.x,
-						evt.tfinger.y,
-						evt.tfinger.dx,
-						evt.tfinger.dy
+						new TouchCoordinates()
+						{
+							x = evt.tfinger.x,
+							y = evt.tfinger.y,
+							dx = evt.tfinger.dx,
+							dy = evt.tfinger.dy
+						}
 					);
 				}
 				else if (evt.type == SDL.SDL_EventType.SDL_FINGERUP)
@@ -1065,10 +1071,13 @@ namespace Microsoft.Xna.Framework
 					TouchPanel.INTERNAL_onTouchEvent(
 						(int) evt.tfinger.fingerId,
 						TouchLocationState.Released,
-						evt.tfinger.x,
-						evt.tfinger.y,
-						0,
-						0
+						new TouchCoordinates()
+						{
+							x = evt.tfinger.x,
+							y = evt.tfinger.y,
+							dx = 0,
+							dy = 0
+						}
 					);
 				}
 

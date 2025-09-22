@@ -24,6 +24,41 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Xna.Framework.Graphics
 {
+	#region Request Structs
+	/* These structs were made as a workaround to a bug found on Mono
+	 * 32-bit AOT compiler for PSVita, where passing more than 5
+	 * parameters in a function causes stack corruption for the sixth
+	 * parameter. This struct is exactly the same as the arguments
+	 * needed to pass for a call to the following methods:
+	 *     - GetRasterizerHash
+	 *     - GetSamplerHash
+	 * -MrProcastinator
+	 */
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct GetRasterizerHashRequest
+	{
+		public CullMode CullMode;
+		public FillMode FillMode;
+		public float DepthBias;
+		public bool MultiSampleAntiAlias;
+		public bool ScissorTestEnable;
+		public float SlopeScaleDepthBias;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct GetSamplerHashRequest
+	{
+		public TextureAddressMode AddressU;
+		public TextureAddressMode AddressV;
+		public TextureAddressMode AddressW;
+		public int MaxAnisotropy;
+		public int MaxMipLevel;
+		public float MipMapLODBias;
+		public TextureFilter Filter;
+	}
+
+	#endregion
+
 	#region Internal PSO Hash Struct
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -462,29 +497,23 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		/* Private Hashing Functions */
 
-		private static StateHash GetRasterizerHash(
-			CullMode cullMode,
-			FillMode fillMode,
-			float depthBias,
-			bool msaa,
-			bool scissor,
-			float slopeScaleDepthBias
-		) {
+		private static StateHash GetRasterizerHash(GetRasterizerHashRequest request)
+		{
 			// Bool -> Int32 conversion
-			int multiSampleAntiAlias = (msaa ? 1 : 0);
-			int scissorTestEnable = (scissor ? 1 : 0);
+			int multiSampleAntiAlias = (request.MultiSampleAntiAlias ? 1 : 0);
+			int scissorTestEnable = (request.ScissorTestEnable ? 1 : 0);
 
 			int packedProperties =
 				  ((int) multiSampleAntiAlias	<< 4)
 				| ((int) scissorTestEnable	<< 3)
-				| ((int) cullMode		<< 1)
-				| ((int) fillMode);
+				| ((int) request.CullMode		<< 1)
+				| ((int) request.FillMode);
 
 			unchecked
 			{
 				return new StateHash(
 					(ulong) packedProperties,
-					(FloatToULong(slopeScaleDepthBias) << 32) | FloatToULong(depthBias)
+					(FloatToULong(request.SlopeScaleDepthBias) << 32) | FloatToULong(request.DepthBias)
 				);
 			}
 		}
@@ -493,14 +522,15 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public static StateHash GetRasterizerHash(RasterizerState state)
 		{
-			return GetRasterizerHash(
-				state.CullMode,
-				state.FillMode,
-				state.DepthBias,
-				state.MultiSampleAntiAlias,
-				state.ScissorTestEnable,
-				state.SlopeScaleDepthBias
-			);
+			return GetRasterizerHash(new GetRasterizerHashRequest()
+			{
+				CullMode = state.CullMode,
+				FillMode = state.FillMode,
+				DepthBias = state.DepthBias,
+				MultiSampleAntiAlias = state.MultiSampleAntiAlias,
+				ScissorTestEnable = state.ScissorTestEnable,
+				SlopeScaleDepthBias = state.SlopeScaleDepthBias
+			});
 		}
 
 		public void BeginApplyRasterizer()
@@ -517,14 +547,15 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public void EndApplyRasterizer()
 		{
-			StateHash hash = GetRasterizerHash(
-				CullMode,
-				FillMode,
-				DepthBias,
-				MultiSampleAntiAlias,
-				ScissorTestEnable,
-				SlopeScaleDepthBias
-			);
+			StateHash hash = GetRasterizerHash(new GetRasterizerHashRequest()
+			{
+				CullMode = CullMode,
+				FillMode = FillMode,
+				DepthBias = DepthBias,
+				MultiSampleAntiAlias = MultiSampleAntiAlias,
+				ScissorTestEnable = ScissorTestEnable,
+				SlopeScaleDepthBias = SlopeScaleDepthBias
+			});
 			RasterizerState newRasterizer;
 			if (!rasterizerCache.TryGetValue(hash, out newRasterizer))
 			{
@@ -581,26 +612,19 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		/* Private Hashing Functions */
 
-		private static StateHash GetSamplerHash(
-			TextureAddressMode addressU,
-			TextureAddressMode addressV,
-			TextureAddressMode addressW,
-			int maxAnisotropy,
-			int maxMipLevel,
-			float mipLODBias,
-			TextureFilter filter
-		) {
+		private static StateHash GetSamplerHash(GetSamplerHashRequest request)
+		{
 			int filterAndAddresses =
-				  ((int) filter		<< 6)
-				| ((int) addressU	<< 4)
-				| ((int) addressV	<< 2)
-				| ((int) addressW);
+				  ((int) request.Filter		<< 6)
+				| ((int) request.AddressU	<< 4)
+				| ((int) request.AddressV	<< 2)
+				| ((int) request.AddressW);
 
 			unchecked
 			{
 				return new StateHash(
-					((ulong) maxAnisotropy << 32) | ((ulong) filterAndAddresses << 0),
-					(FloatToULong(mipLODBias) << 32) | ((ulong) maxMipLevel << 0)
+					((ulong) request.MaxAnisotropy << 32) | ((ulong) filterAndAddresses << 0),
+					(FloatToULong(request.MipMapLODBias) << 32) | ((ulong) request.MaxMipLevel << 0)
 				);
 			}
 		}
@@ -609,15 +633,16 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public static StateHash GetSamplerHash(SamplerState state)
 		{
-			return GetSamplerHash(
-				state.AddressU,
-				state.AddressV,
-				state.AddressW,
-				state.MaxAnisotropy,
-				state.MaxMipLevel,
-				state.MipMapLevelOfDetailBias,
-				state.Filter
-			);
+			return GetSamplerHash(new GetSamplerHashRequest()
+			{
+				AddressU = state.AddressU,
+				AddressV = state.AddressV,
+				AddressW = state.AddressW,
+				MaxAnisotropy = state.MaxAnisotropy,
+				MaxMipLevel = state.MaxMipLevel,
+				MipMapLODBias = state.MipMapLevelOfDetailBias,
+				Filter = state.Filter
+			});
 		}
 
 		public void BeginApplySampler(SamplerStateCollection samplers, int register)
@@ -635,15 +660,16 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		public void EndApplySampler(SamplerStateCollection samplers, int register)
 		{
-			StateHash hash = GetSamplerHash(
-				AddressU,
-				AddressV,
-				AddressW,
-				MaxAnisotropy,
-				MaxMipLevel,
-				MipMapLODBias,
-				Filter
-			);
+			StateHash hash = GetSamplerHash(new GetSamplerHashRequest()
+			{
+				AddressU = AddressU,
+				AddressV = AddressV,
+				AddressW = AddressW,
+				MaxAnisotropy = MaxAnisotropy,
+				MaxMipLevel = MaxMipLevel,
+				MipMapLODBias = MipMapLODBias,
+				Filter = Filter
+			});
 			SamplerState newSampler;
 			if (!samplerCache.TryGetValue(hash, out newSampler))
 			{

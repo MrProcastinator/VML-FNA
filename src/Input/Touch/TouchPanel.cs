@@ -10,10 +10,30 @@
 #region Using Statements
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 #endregion
 
 namespace Microsoft.Xna.Framework.Input.Touch
 {
+	#region Request Structs
+	/* These structs were made as a workaround to a bug found on Mono
+	 * 32-bit AOT compiler for PSVita, where passing more than 5
+	 * parameters in a function causes stack corruption for the sixth
+	 * parameter. This struct is exactly the same as the arguments
+	 * needed to pass for a call to the following methods:
+	 *     - INTERNAL_onTouchEvent
+	 * -MrProcastinator
+	 */
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct TouchCoordinates
+	{
+		internal float x;
+		internal float y;
+		internal float dx;
+		internal float dy;
+	}
+	#endregion
+
 	// https://msdn.microsoft.com/en-us/library/microsoft.xna.framework.input.touch.touchpanel.aspx
 	public static class TouchPanel
 	{
@@ -123,6 +143,7 @@ namespace Microsoft.Xna.Framework.Input.Touch
 			gestures.Enqueue(gesture);
 		}
 
+		[Obsolete("This method corrupts the value of dy when called, it should not be used.", true)]
 		internal static void INTERNAL_onTouchEvent(
 			int fingerId,
 			TouchLocationState state,
@@ -132,10 +153,19 @@ namespace Microsoft.Xna.Framework.Input.Touch
 			float dy
 		)
 		{
+			throw new NotSupportedException("This method corrupts the value of dy when called, it should not be used.");
+		}
+
+		internal static void INTERNAL_onTouchEvent(
+			int fingerId,
+			TouchLocationState state,
+			TouchCoordinates coords
+		)
+		{
 			// Calculate the scaled touch position
 			Vector2 touchPos = new Vector2(
-				(float) Math.Round(x * DisplayWidth),
-				(float) Math.Round(y * DisplayHeight)
+				(float)Math.Round(coords.x * DisplayWidth),
+				(float)Math.Round(coords.y * DisplayHeight)
 			);
 
 			// Notify the Gesture Detector about the event
@@ -148,8 +178,8 @@ namespace Microsoft.Xna.Framework.Input.Touch
 				case TouchLocationState.Moved:
 
 					Vector2 delta = new Vector2(
-						(float) Math.Round(dx * DisplayWidth),
-						(float) Math.Round(dy * DisplayHeight)
+						(float)Math.Round(coords.dx * DisplayWidth),
+						(float)Math.Round(coords.dy * DisplayHeight)
 					);
 
 					GestureDetector.OnMoved(fingerId, touchPos, delta);

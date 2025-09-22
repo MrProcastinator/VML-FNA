@@ -115,24 +115,25 @@ namespace Microsoft.Xna.Framework.Graphics
 			unsafe
 			{
 				float* resPtr = (float*) values;
-				return new Matrix(
-					resPtr[0],
-					resPtr[4],
-					resPtr[8],
-					resPtr[12],
-					resPtr[1],
-					resPtr[5],
-					resPtr[9],
-					resPtr[13],
-					resPtr[2],
-					resPtr[6],
-					resPtr[10],
-					resPtr[14],
-					resPtr[3],
-					resPtr[7],
-					resPtr[11],
-					resPtr[15]
-				);
+				return new Matrix()
+				{
+					M11 = resPtr[0],
+					M12 = resPtr[4],
+					M13 = resPtr[8],
+					M14 = resPtr[12],
+					M21 = resPtr[1],
+					M22 = resPtr[5],
+					M23 = resPtr[9],
+					M24 = resPtr[13],
+					M31 = resPtr[2],
+					M32 = resPtr[6],
+					M33 = resPtr[10],
+					M34 = resPtr[14],
+					M41 = resPtr[3],
+					M42 = resPtr[7],
+					M43 = resPtr[11],
+					M44 = resPtr[15]
+				};
 			}
 		}
 

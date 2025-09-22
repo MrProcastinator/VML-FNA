@@ -10,12 +10,47 @@
 #region Using Statements
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
 namespace Microsoft.Xna.Framework.Media
 {
+	#region Request Structs
+	/* These structs were made as a workaround to a bug found on Mono
+	 * 32-bit AOT compiler for PSVita, where passing more than 5
+	 * parameters in a function causes stack corruption for the sixth
+	 * parameter. This struct is exactly the same as the arguments
+	 * needed to pass for a call to the following methods:
+	 *     - Video constructor
+	 * -MrProcastinator
+	 */
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct VideoProperties
+	{
+		internal int durationMS;
+		internal int width;
+		internal int height;
+		internal float framesPerSecond;
+		internal VideoSoundtrackType soundtrackType;
+
+		public VideoProperties(
+			int durationMS,
+			int width,
+			int height,
+			float framesPerSecond,
+			VideoSoundtrackType soundtrackType
+		) {
+			this.durationMS = durationMS;
+			this.width = width;
+			this.height = height;
+			this.framesPerSecond = framesPerSecond;
+			this.soundtrackType = soundtrackType;
+		}
+	}
+	#endregion
+
 	public sealed class Video
 	{
 		#region Public Properties
@@ -110,6 +145,7 @@ namespace Microsoft.Xna.Framework.Media
 			needsDurationHack = true;
 		}
 
+		[Obsolete("This method corrupts the value of framesPerSecond when called, it should not be used.", true)]
 		internal Video(
 			string fileName,
 			GraphicsDevice device,
@@ -119,6 +155,14 @@ namespace Microsoft.Xna.Framework.Media
 			float framesPerSecond,
 			VideoSoundtrackType soundtrackType
 		) {
+			throw new NotSupportedException("This constructor corrupts the value of framesPerSecond when called, it should not be used.");
+		}
+
+		internal Video(
+			string fileName,
+			GraphicsDevice device,
+			VideoProperties properties
+		) {
 			handle = fileName;
 			GraphicsDevice = device;
 
@@ -127,21 +171,20 @@ namespace Microsoft.Xna.Framework.Media
 			 * accuracy's sake we have to wait until VideoPlayer
 			 * tries to load this before throwing Exceptions.
 			 */
-			Width = width;
-			Height = height;
-			FramesPerSecond = framesPerSecond;
+			Width = properties.width;
+			Height = properties.height;
+			FramesPerSecond = properties.framesPerSecond;
 
 			// FIXME: Oh, hey! I wish we had this info in Theora!
-			Duration = TimeSpan.FromMilliseconds(durationMS);
+			Duration = TimeSpan.FromMilliseconds(properties.durationMS);
 			needsDurationHack = false;
 
-			VideoSoundtrackType = soundtrackType;
+			VideoSoundtrackType = properties.soundtrackType;
 		}
-
 		#endregion
 
 		#region Public Extensions
-		
+
 		public static Video FromUriEXT(Uri uri, GraphicsDevice graphicsDevice)
 		{
 			string path;

@@ -18,24 +18,25 @@ namespace Microsoft.Xna.Framework.Content
 			Matrix existingInstance
 		) {
 			// 4x4 matrix
-			return new Matrix(
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle(),
-				input.ReadSingle()
-			);
+			return new Matrix()
+			{
+				M11 = input.ReadSingle(),
+				M12 = input.ReadSingle(),
+				M13 = input.ReadSingle(),
+				M14 = input.ReadSingle(),
+				M21 = input.ReadSingle(),
+				M22 = input.ReadSingle(),
+				M23 = input.ReadSingle(),
+				M24 = input.ReadSingle(),
+				M31 = input.ReadSingle(),
+				M32 = input.ReadSingle(),
+				M33 = input.ReadSingle(),
+				M34 = input.ReadSingle(),
+				M41 = input.ReadSingle(),
+				M42 = input.ReadSingle(),
+				M43 = input.ReadSingle(),
+				M44 = input.ReadSingle(),
+			};
 		}
 
 		#endregion

@@ -11,11 +11,35 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
 using System.Text;
 #endregion
 
 namespace Microsoft.Xna.Framework.Graphics
 {
+	#region Request Structs
+	/* These structs were made as a workaround to a bug found on Mono
+	 * 32-bit AOT compiler for PSVita, where passing more than 5
+	 * parameters in a function causes stack corruption for the sixth
+	 * parameter. This struct is exactly the same as the arguments
+	 * needed to pass for a call to the following methods:
+	 *     - SpriteFont Constructor
+	 * -MrProcastinator
+	 */
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct SpriteFontProperties
+	{
+		internal List<Rectangle> GlyphBounds;
+		internal List<Rectangle> Cropping;
+		internal List<char> Characters;
+		internal int LineSpacing;
+		internal float Spacing;
+		internal List<Vector3> Kerning;
+		internal char? DefaultCharacter;
+	}
+
+	#endregion
+
 	// http://msdn.microsoft.com/en-us/library/microsoft.xna.framework.graphics.spritefont.aspx
 	public sealed class SpriteFont
 	{
@@ -92,6 +116,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		#region Internal Constructor
 
+		[Obsolete("This constructor corrupts the value of spacing when called, it should not be used, use the one with SpriteFontProperties.", true)]
 		internal SpriteFont(
 			Texture2D texture,
 			List<Rectangle> glyphBounds,
@@ -101,22 +126,31 @@ namespace Microsoft.Xna.Framework.Graphics
 			float spacing,
 			List<Vector3> kerningData,
 			char? defaultCharacter
-		) {
-			Characters = new ReadOnlyCollection<char>(characters.ToArray());
-			DefaultCharacter = defaultCharacter;
-			LineSpacing = lineSpacing;
-			Spacing = spacing;
+		)
+		{
+			throw new NotSupportedException("This constructor corrupts the value of spacing when called, it should not be used, use the one with SpriteFontProperties.");
+		}
+
+		internal SpriteFont(
+			Texture2D texture,
+			SpriteFontProperties properties
+		)
+		{
+			Characters = new ReadOnlyCollection<char>(properties.Characters.ToArray());
+			DefaultCharacter = properties.DefaultCharacter;
+			LineSpacing = properties.LineSpacing;
+			Spacing = properties.Spacing;
 
 			textureValue = texture;
-			glyphData = glyphBounds;
-			croppingData = cropping;
-			kerning = kerningData;
-			characterMap = characters;
+			glyphData = properties.GlyphBounds;
+			croppingData = properties.Cropping;
+			kerning = properties.Kerning;
+			characterMap = properties.Characters;
 
-			characterIndexMap = new Dictionary<char, int>(characters.Count);
-			for (int i = 0; i < characters.Count; i += 1)
+			characterIndexMap = new Dictionary<char, int>(properties.Characters.Count);
+			for (int i = 0; i < properties.Characters.Count; i += 1)
 			{
-				characterIndexMap[characters[i]] = i;
+				characterIndexMap[properties.Characters[i]] = i;
 			}
 		}
 

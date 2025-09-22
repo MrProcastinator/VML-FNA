@@ -68,7 +68,7 @@ namespace Microsoft.Xna.Framework.Graphics
         {
             Viewport viewport = GraphicsDevice.Viewport;
 
-            Matrix projection = Matrix.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, 0, 1);
+            Matrix projection = Matrix.CreateOrthographicOffCenter(new Rectangle(0, viewport.Width, viewport.Height, 0), 0, 1);
             Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
 
             matrixParam.SetValue(halfPixelOffset * projection);

@@ -72,13 +72,16 @@ namespace Microsoft.Xna.Framework.Content
 				}
 				return new SpriteFont(
 					texture,
-					glyphs,
-					cropping,
-					charMap,
-					lineSpacing,
-					spacing,
-					kerning,
-					defaultCharacter
+					new SpriteFontProperties()
+					{
+						GlyphBounds = glyphs,
+						Cropping = cropping,
+						Characters = charMap,
+						LineSpacing = lineSpacing,
+						Spacing = spacing,
+						Kerning = kerning,
+						DefaultCharacter = defaultCharacter
+					}
 				);
 			}
 		}
