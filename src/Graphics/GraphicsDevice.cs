@@ -954,14 +954,19 @@ namespace Microsoft.Xna.Framework.Graphics
 				{
 					FNA3D.FNA3D_RenderTargetBinding* rt = (FNA3D.FNA3D_RenderTargetBinding*) Marshal.UnsafeAddrOfPinnedArrayElement(nativeTargetBindingsNext, 0);
 					PrepareRenderTargetBindings(rt, renderTargets);
+					/* Needed on PSVita */
+					GCHandle pinnedRt = GCHandle.Alloc(nativeTargetBindingsNext, GCHandleType.Pinned);
+					IntPtr handleRt = pinnedRt.AddrOfPinnedObject();
 					FNA3D.FNA3D_SetRenderTargets(
 						GLDevice,
-						rt,
+						handleRt,
 						renderTargets.Length,
 						target.DepthStencilBuffer,
 						target.DepthStencilFormat,
 						(byte) (target.RenderTargetUsage != RenderTargetUsage.DiscardContents ? 1 : 0) /* lol c# */
 					);
+
+					pinnedRt.Free();
 				}
 
 				// Set the viewport/scissor to the size of the first render target.

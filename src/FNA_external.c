@@ -22,6 +22,13 @@ static void FNA3D_CreateEffect_wrapped(FNA3D_Device* device, uint8_t* effectCode
     FNA3D_CreateEffect(device, VML_MARSHAL_ARRAY(uint8_t, effectCode), length, effect, effectData);
 }
 
+static void FNA3D_SetRenderTargets_wrapped(FNA3D_Device *device, FNA3D_RenderTargetBinding *renderTargets, int32_t numRenderTargets, FNA3D_Renderbuffer *depthStencilBuffer, FNA3D_DepthFormat depthFormat, uint8_t preserveTargetContents)
+{
+    /* I have no idea why */
+    FNA3D_SetRenderTargets(device, VML_OFFSET_ARRAY(FNA3D_RenderTargetBinding, renderTargets, -3), numRenderTargets, depthStencilBuffer, depthFormat, preserveTargetContents);
+}
+
+
 void VMLFNARegisterCalls()
 {
     /* FNA3D */
@@ -49,8 +56,7 @@ void VMLFNARegisterCalls()
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_VerifySampler", FNA3D_VerifySampler);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_VerifyVertexSampler", FNA3D_VerifyVertexSampler);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_ApplyVertexBufferBindings", FNA3D_ApplyVertexBufferBindings);
-    mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SetRenderTargets", FNA3D_SetRenderTargets);
-    mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SetRenderTargets", FNA3D_SetRenderTargets);
+    mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_SetRenderTargets", FNA3D_SetRenderTargets_wrapped);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_ResolveTarget", FNA3D_ResolveTarget);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_ResetBackbuffer", FNA3D_ResetBackbuffer);
     mono_add_internal_call("Microsoft.Xna.Framework.Graphics.FNA3D::FNA3D_ReadBackbuffer", FNA3D_ReadBackbuffer);

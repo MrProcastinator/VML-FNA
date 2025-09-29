@@ -197,14 +197,20 @@ namespace Microsoft.Xna.Framework.Media
 					rt,
 					videoTexture
 				);
+				/* Needed on PSVita */
+				GCHandle pinnedRt = GCHandle.Alloc(nativeVideoTexture, GCHandleType.Pinned);
+				IntPtr handleRt = pinnedRt.AddrOfPinnedObject();
+
 				FNA3D.FNA3D_SetRenderTargets(
 					currentDevice.GLDevice,
-					rt,
+					handleRt,
 					videoTexture.Length,
 					IntPtr.Zero,
 					DepthFormat.None,
 					0
 				);
+
+				pinnedRt.Free();
 			}
 
 			// Prep render state
@@ -265,14 +271,20 @@ namespace Microsoft.Xna.Framework.Media
 						rt,
 						oldTargets
 					);
+					/* Needed on PSVita */
+					GCHandle pinnedRt = GCHandle.Alloc(nativeOldTargets, GCHandleType.Pinned);
+					IntPtr handleRt = pinnedRt.AddrOfPinnedObject();
+
 					FNA3D.FNA3D_SetRenderTargets(
 						currentDevice.GLDevice,
-						rt,
+						handleRt,
 						oldTargets.Length,
 						oldTarget.DepthStencilBuffer,
 						oldTarget.DepthStencilFormat,
 						(byte) (oldTarget.RenderTargetUsage != RenderTargetUsage.DiscardContents ? 1 : 0) /* lol c# */
 					);
+
+					pinnedRt.Free();
 				}
 			}
 			oldTargets = null;

@@ -378,16 +378,6 @@ namespace Microsoft.Xna.Framework.Graphics
 		);
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
-		public static extern unsafe void FNA3D_SetRenderTargets(
-			IntPtr device,
-			FNA3D_RenderTargetBinding* renderTargets,
-			int numRenderTargets,
-			IntPtr depthStencilBuffer, /* FNA3D_Renderbuffer */
-			DepthFormat depthFormat,
-			byte preserveDepthStencilContents
-		);
-
-		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_ResolveTarget(
 			IntPtr device,
 			ref FNA3D_RenderTargetBinding target
