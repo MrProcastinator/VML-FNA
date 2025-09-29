@@ -43,21 +43,13 @@ namespace MonoGame.Utilities
             while (filePath.Contains("//"))
                 filePath = filePath.Replace("//", "/");
 
-            bool hasForwardSlash = filePath.StartsWith(ForwardSlashString);
-            if (!hasForwardSlash)
-                filePath = ForwardSlashString + filePath;
 
-            // Get a uri for filePath using the file:// schema and no host.
-            var src = new Uri("file://" + filePath);
-
-            var dst = new Uri(src, relativeFile);
-
-            // The uri now contains the path to the relativeFile with 
-            // relative addresses resolved... get the local path.
-            var localPath = dst.LocalPath;
-
-            if (!hasForwardSlash && localPath.StartsWith("/"))
-                localPath = localPath.Substring(1);
+            var lastSeparator = filePath.LastIndexOf(ForwardSlash);
+            if (lastSeparator != -1)
+            {
+                filePath = filePath.Substring(0, lastSeparator);
+            }
+            var localPath = Path.Combine(filePath, relativeFile);
 
             // Convert the directory separator characters to the 
             // correct platform specific separator.

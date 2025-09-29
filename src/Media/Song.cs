@@ -165,6 +165,7 @@ namespace Microsoft.Xna.Framework.Media
 		/// <param name="name">Name of the song.</param>
 		/// <param name="uri">Uri object that represents the URI.</param>
 		/// <returns>Song object that can be used to play the song.</returns>
+		[Obsolete("Methods using URI are not supported on PSVita", true)]
 		public static Song FromUri(string name, Uri uri)
 		{
 			string path;

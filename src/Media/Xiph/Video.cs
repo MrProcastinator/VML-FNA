@@ -185,6 +185,7 @@ namespace Microsoft.Xna.Framework.Media
 
 		#region Public Extensions
 
+		[Obsolete("Methods using URI are not supported on PSVita", true)]
 		public static Video FromUriEXT(Uri uri, GraphicsDevice graphicsDevice)
 		{
 			string path;
