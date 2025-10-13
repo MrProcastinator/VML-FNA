@@ -869,6 +869,19 @@ namespace Microsoft.Xna.Framework.Graphics
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		private static extern IntPtr FNA3D_Image_Load(
+			IntPtr readFunc,
+			IntPtr skipFunc,
+			IntPtr eofFunc,
+			IntPtr context,
+			out int width,
+			out int height,
+			out int len,
+			int forceW,
+			int forceH,
+			byte zoom
+		);
+
+		private static IntPtr FNA3D_Image_Load(
 			FNA3D_Image_ReadFunc readFunc,
 			FNA3D_Image_SkipFunc skipFunc,
 			FNA3D_Image_EOFFunc eofFunc,
@@ -879,7 +892,21 @@ namespace Microsoft.Xna.Framework.Graphics
 			int forceW,
 			int forceH,
 			byte zoom
-		);
+		)
+		{
+			return FNA3D_Image_Load(
+				Marshal.GetFunctionPointerForDelegate(readFunc),
+				Marshal.GetFunctionPointerForDelegate(skipFunc),
+				Marshal.GetFunctionPointerForDelegate(eofFunc),
+				context,
+				out width,
+				out height,
+				out len,
+				forceW,
+				forceH,
+				zoom
+			);
+		}
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		public static extern void FNA3D_Image_Free(IntPtr mem);
